@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('订单列表')"></head>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('order')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::order-top('list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="username_like" th:value="${params?.get('username_like')}" placeholder="用户名">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="bizNo" th:value="${params?.get('bizNo')}" placeholder="平台业务号">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="payNo" th:value="${params?.get('payNo')}" placeholder="第三方支付订单号">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="payType">
+                  <option value th:selected="${params?.get('payType')} == ''">--付款方式--</option>
+                  <option th:each="t : ${payTypes}" th:value="${t.code}" th:text="${t.value}" th:selected="${params?.get('payType')} == ${t.code}"></option>
+                </select>
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="status">
+                  <option value th:selected="${params?.get('status')} == ''">--订单状态--</option>
+                  <option th:each="s : ${statuses}" th:value="${s.code}" th:text="${s.value}" th:selected="${params?.get('status')} == ${s.code}"></option>
+                </select>
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="payTime_begin" th:value="${params?.get('payTime_begin')}" placeholder="起始付款时间" id="pay-time-begin">
+              </div>
+              ~
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="payTime_end" th:value="${params?.get('payTime_end')}" placeholder="截止付款时间" id="pay-time-end">
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">用户名</th>
+                  <th scope="col">订单金额</th>
+                  <th scope="col">平台业务号</th>
+                  <th scope="col">第三方支付订单号</th>
+                  <th scope="col">付款类型</th>
+                  <th scope="col">订单状态</th>
+                  <th scope="col">付款时间</th>
+                  <th scope="col">完成时间</th>
+                  <th scope="col">备注</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="o : ${pageInfo?.list}">
+                  <th scope="row" th:text="${o.id}"></th>
+                  <td th:text="${o.username}"></td>
+                  <td th:text="${o.amount}"></td>
+                  <td th:text="${o.bizNo}"></td>
+                  <td th:text="${o.payNo}"></td>
+                  <td th:text="${orderPayType[o.payType]}"></td>
+                  <td th:text="${orderStatus[o.status]}"></td>
+                  <td th:text="${#dates.format(o.payTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td th:text="${#dates.format(o.completeTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td th:text="${o.remark}"></td>
+                  <td></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="11">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/order/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      feather.replace();
+
+      // 起始付款时间
+      laydate.render({
+        elem: "#pay-time-begin",
+        type: "datetime",
+        theme: "#007bff"
+      });
+
+      // 截止付款时间
+      laydate.render({
+        elem: "#pay-time-end",
+        type: "datetime",
+        theme: "#007bff"
+      });
+
+      // 重置
+      $("#btn-reset").on("click", function() {
+        $("#form-search input").val("");
+        $("#form-search select").val("");
+      });
+
+      // 搜索
+      $("#btn-search").on("click", function() {
+        pageSearch("/console/order/list.v", [[${pageInfo}]], "#form-search", ["payType", "status"], []);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,242 @@
+body{
+  /*基色*/
+  --base-color: #939597;
+  /*主色*/
+  --main-color: #F5DF4D;
+  /*辅色*/
+  --sup-color: #007bff;
+}
+
+@media (min-width: 768px) {
+  .my-nav {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 0 0 0 0 !important;
+    max-width: 25%;
+  }
+  .sidebar svg{
+    display: none;
+  }
+  .sidebar-sticky {
+    padding-top: 7rem !important;
+  }
+  main {
+    margin-left: auto !important;
+    max-width: 75%;
+  }
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+body {
+  font-size: .875rem;
+}
+
+.my-text-base {
+  color: var(--base-color) !important;
+}
+
+.my-text-main {
+  color: var(--main-color) !important;
+}
+
+.my-text-sup {
+  color: var(--sup-color) !important;
+}
+
+.my-bg-base {
+  background-color: var(--base-color) !important;
+}
+
+.my-bg-main {
+  background-color: var(--main-color) !important;
+}
+
+.my-bg-sup {
+  background-color: var(--sup-color) !important;
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.my-form-signin {
+  width: 100%;
+  max-width: 22rem;
+  padding: 0.9rem;
+  padding-top: 1.5rem;
+  margin: auto;
+}
+
+.my-form-signin .checkbox {
+  font-weight: 400;
+}
+
+.my-form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 0.6rem;
+  font-size: 1rem;
+}
+
+.my-form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+
+.sidebar {
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  padding: 3rem 0 0 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.sidebar .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.sidebar .nav-link .feather {
+  margin-right: 4px;
+  color: #999;
+}
+
+.sidebar .nav-link.active {
+  color: #007bff;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+  color: inherit;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+.navbar-brand-bg {
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, .25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar .navbar-toggler {
+  top: .25rem;
+  right: 1rem;
+}
+
+.navbar .form-control {
+  padding: .75rem 1rem;
+  border-width: 0;
+  border-radius: 0;
+}
+
+.form-control-dark {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .1);
+}
+
+.form-control-dark:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+.navbar-dark .nav .nav-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-dark .nav .nav-link:hover, .navbar-dark .nav .nav-link:focus {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.my-navbar-logo {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius:1.5rem;
+  margin-right: 0.6rem;
+}
+
+.my-login-logo {
+  width: 5rem;
+  height: 5rem;
+  border-radius:0.9rem;
+}
+
+.my-mid {
+  float: none;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.my-main-top {
+  margin-top: 3.5rem;
+}
+
+.my-second-nav {
+  color: 007bff;
+}
+
+.my-img-captcha {
+  width: 5.5rem;
+  height: 100%;
+  cursor: pointer;
+}
+
+/***************** 覆盖bootstrap的样式 *****************/
+
+.dropdown-item.active, .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: var(--base-color) !important;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+  text-decoration: none;
+  pointer-events: none;
+  cursor: default;
+}
+
+.breadcrumb-item.active a{
+  color: #6c757d;
+  text-decoration: none;
+  pointer-events: none;
+  cursor: default;
+}

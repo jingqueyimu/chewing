@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jingqueyimu.mapper.FeedbackMapper">
+    <select id="listFeedback" parameterType="java.util.HashMap" resultType="com.jingqueyimu.model.vo.FeedbackVO">
+        SELECT 
+            f.id, f.user_id, f.content, f.reply, f.type, f.status, f.gmt_create,
+            u.username 
+        FROM t_feedback f 
+        LEFT JOIN t_user u ON f.user_id = u.id 
+        WHERE 1 = 1
+        <if test="type != null">
+            AND f.type = #{type}
+        </if>
+        <if test="status != null">
+            AND f.status = #{status}
+        </if>
+        <if test="username_like != null and username_like != ''">
+            AND u.username LIKE '%${username_like}%'
+        </if>
+    </select>
+</mapper>

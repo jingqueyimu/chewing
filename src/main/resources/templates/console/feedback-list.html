@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('意见反馈列表')"></head>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('feedback')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::feedback-top('list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="username_like" th:value="${params?.get('username_like')}" placeholder="用户名">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="type">
+                  <option value th:selected="${params?.get('type')} == ''">--反馈类型--</option>
+                  <option th:each="t : ${feedbackTypes}" th:value="${t.code}" th:text="${t.value}" th:selected="${params?.get('type')} == ${t.code}"></option>
+                </select>
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="status">
+                  <option value th:selected="${params?.get('status')} == ''">--反馈状态--</option>
+                  <option th:each="s : ${feedbackStatuses}" th:value="${s.code}" th:text="${s.value}" th:selected="${params?.get('status')} == ${s.code}"></option>
+                </select>
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">用户名</th>
+                  <th scope="col">反馈类型</th>
+                  <th scope="col">反馈状态</th>
+                  <th scope="col">反馈时间</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="f : ${pageInfo?.list}" th:id=${f.id}>
+                  <th scope="row" th:text="${f.id}"></th>
+                  <td th:text="${f.username}"></td>
+                  <td th:text="${feedbackTypeMap[f.type]}"></td>
+                  <td th:text="${feedbackStatusMap[f.status]}"></td>
+                  <td th:text="${#dates.format(f.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td>
+                    <a class="text-primary" href="#" title="查看" data-toggle="modal" data-target="#modal-see-feedback" th:data-feedback="${f}">
+                      <i data-feather="eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="6">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/feedback/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <!-- 查看意见反馈 -->
+    <div class="modal fade" id="modal-see-feedback" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-see-feedback" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-see-feedback">意见反馈</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label for="site-config-content" class="col-sm-2 col-form-label">内容</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="feedback-content" rows="4" disabled></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-content" class="col-sm-2 col-form-label">回复</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="feedback-reply" rows="4"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-see-feedback-reply">回复</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="feedback-id">
+
+    <script th:inline="javascript">
+      feather.replace();
+      
+      // 反馈状态
+      var feedbackStatusDict;
+      $(function(){
+        // 获取字典
+        feedbackStatusDict = postJsonSync("/common/dict", {name: "FeedbackStatus"}).data;
+      });
+
+      // 重置
+      $("#btn-reset").on("click", function() {
+        $("#form-search input").val("");
+        $("#form-search select").val("");
+      });
+
+      // 搜索
+      $("#btn-search").on("click", function() {
+        pageSearch("/console/feedback/list.v", [[${pageInfo}]], "#form-search", ["type", "status"], []);
+      });
+      
+      // 查看反馈
+      $("#modal-see-feedback").on("show.bs.modal", function (event) {
+        var feedback = event.relatedTarget.dataset.feedback;
+        var feedbackJson = parseJson(feedback);
+        $("#feedback-id").val(feedbackJson.id);
+        $("#feedback-content").val(feedbackJson.content);
+        $("#feedback-reply").val(feedbackJson.reply);
+        $("#feedback-reply").prop("disabled", feedbackJson.status == 1);
+      });
+      
+      // 回复反馈
+      $("#btn-see-feedback-reply").on("click", function(event) {
+        var req = {
+          id: $("#feedback-id").val(),
+          reply: $("#feedback-reply").val()
+        };
+        postJson("/console/feedback/reply", req, function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          alertSucc("回复成功");
+          $("#modal-see-feedback").modal("hide");
+          // 更新列表数据
+          var data = resp.data;
+          var cols = $("#" + data.id).children();
+          cols.eq(3).text(feedbackStatusDict[data.status]);
+        });
+      });
+    </script>
+  </body>
+</html>

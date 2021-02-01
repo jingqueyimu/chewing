@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('管理员列表')"></head>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('admin')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::admin-top('list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="name_like" th:value="${params?.get('name_like')}" placeholder="账户名">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="lockFlag">
+                  <option value th:selected="${params?.get('lockFlag')} == ''">--是否锁定--</option>
+                  <option value="true" th:selected="${params?.get('lockFlag') == true}">是</option>
+                  <option value="false" th:selected="${params?.get('lockFlag') == false}">否</option>
+                </select>
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-admin">添加管理员</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">账户名</th>
+                  <th scope="col">姓名</th>
+                  <th scope="col">手机号</th>
+                  <th scope="col">邮箱</th>
+                  <th scope="col">是否锁定</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="a : ${pageInfo?.list}" th:id="${a.id}">
+                  <th scope="row" th:text="${a.id}"></th>
+                  <td th:text="${a.name}"></td>
+                  <td th:text="${a.realName}"></td>
+                  <td th:text="${a.mobile}"></td>
+                  <td th:text="${a.email}"></td>
+                  <td th:text="${a.lockFlag == true ? '是' : '否'}"></td>
+                  <td>
+                    <a class="text-primary mr-1" href="#" title="编辑" data-toggle="modal" data-target="#modal-edit-admin" th:data-admin-id="${a.id}">
+                      <i data-feather="edit"></i>
+                    </a>
+                    <a class="text-primary" href="#" title="权限" data-toggle="modal" data-target="#modal-edit-admin-permission" th:data-admin-id="${a.id}">
+                      <i data-feather="lock"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="7">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/admin/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <!-- 添加管理员 -->
+    <div class="modal fade" id="modal-add-admin" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-add-admin" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-add-admin">添加管理员</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label for="admin-name" class="col-sm-2 col-form-label">账户名</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-password" class="col-sm-2 col-form-label">密码</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-password">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-real-name" class="col-sm-2 col-form-label">姓名</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-real-name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-mobile" class="col-sm-2 col-form-label">手机号</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-mobile">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-email" class="col-sm-2 col-form-label">邮箱</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-email">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-add-admin-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 编辑管理员 -->
+    <div class="modal fade" id="modal-edit-admin" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-admin" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-edit-admin">编辑管理员</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label for="admin-name" class="col-sm-2 col-form-label">账户名</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-real-name" class="col-sm-2 col-form-label">姓名</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-real-name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-mobile" class="col-sm-2 col-form-label">手机号</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-mobile">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-email" class="col-sm-2 col-form-label">邮箱</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="admin-email">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="admin-lock-flag" class="col-sm-2 col-form-label">锁定</label>
+                <div class="col-sm-10">
+                  <select class="custom-select mr-sm-2" name="admin-lock-flag">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-edit-admin-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 编辑权限 -->
+    <div class="modal fade" id="modal-edit-admin-permission" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-admin-permission" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-edit-admin-permission">编辑权限</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="admin-permission-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-edit-admin-permission-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" id="admin-id">
+    <script th:inline="javascript">
+       feather.replace();
+
+       // 重置
+       $("#btn-reset").on("click", function() {
+         $("#form-search input").val("");
+         $("#form-search select").val("");
+       });
+
+       // 搜索
+       $("#btn-search").on("click", function() {
+         pageSearch("/console/admin/list.v", [[${pageInfo}]], "#form-search", [], ["lockFlag"]);
+       });
+       
+       // 添加管理员
+       $("#btn-add-admin-save").on("click", function(){
+         var req = {
+           name: $("#modal-add-admin input[name='admin-name']").val(),
+           password: $("#modal-add-admin input[name='admin-password']").val(),
+           realName: $("#modal-add-admin input[name='admin-real-name']").val(),
+           mobile: $("#modal-add-admin input[name='admin-mobile']").val(),
+           email: $("#modal-add-admin input[name='admin-email']").val()
+         };
+         if (isEmpty(req.name)){
+           alertFail("请输入账户名");
+           return;
+         }
+         if (isEmpty(req.password)){
+           alertFail("请输入密码");
+           return;
+         }
+         if (isEmpty(req.realName)){
+           alertFail("请输入姓名");
+           return;
+         }
+         if (isEmpty(req.mobile)){
+           alertFail("请输入手机号");
+           return;
+         }
+         postJson("/console/admin/save", req, function(resp) {
+           if (!isSucc(resp)) {
+             alertFail(resp.msg);
+             return;
+           }
+           $("#modal-add-admin").modal("hide");
+           alertSucc("添加管理员成功", function() {
+             location.reload();
+           });
+         });
+       });
+
+       // 编辑管理员
+       $("#modal-edit-admin").on("show.bs.modal", function (event) {
+        var adminId = event.relatedTarget.dataset.adminId;
+        postJson("/console/admin/get", {id: adminId}, function(resp){
+          if (!isSucc(resp)) {
+            alert(resp.msg);
+            return;
+          }
+          var admin = resp.data;
+          $("#admin-id").val(admin.id);
+          $("#modal-edit-admin input[name='admin-name']").val(admin.name);
+          $("#modal-edit-admin input[name='admin-real-name']").val(admin.realName);
+          $("#modal-edit-admin input[name='admin-mobile']").val(admin.mobile);
+          $("#modal-edit-admin input[name='admin-email']").val(admin.email);
+          $("#modal-edit-admin select[name='admin-lock-flag']").val(admin.lockFlag + "");
+        });
+      })
+
+      // 保存管理员
+      $("#btn-edit-admin-save").on("click", function(){
+        var req = {
+          id: $("#admin-id").val(),
+          name: $("#modal-edit-admin input[name='admin-name']").val(),
+          realName: $("#modal-edit-admin input[name='admin-real-name']").val(),
+          mobile: $("#modal-edit-admin input[name='admin-mobile']").val(),
+          email: $("#modal-edit-admin input[name='admin-email']").val(),
+          lockFlag: $("#modal-edit-admin select[name='admin-lock-flag']").val()
+        };
+        if (isEmpty(req.id)){
+          alertFail("管理员ID不能为空");
+          return;
+        }
+        postJson("/console/admin/update_admin_info", req, function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          $("#modal-edit-admin").modal("hide");
+          alertSucc("编辑管理员成功");
+          // 更新列表数据
+          var admin = resp.data;
+          var adminCols = $("#" + admin.id).children();
+          adminCols.eq(1).text(admin.name);
+          adminCols.eq(2).text(admin.realName);
+          adminCols.eq(3).text(admin.mobile);
+          adminCols.eq(4).text(admin.email);
+          adminCols.eq(5).text(admin.lockFlag ? "是" : "否");
+        });
+      });
+
+      // 编辑管理员权限
+      $("#modal-edit-admin-permission").on("show.bs.modal", function (event) {
+        var adminId = event.relatedTarget.dataset.adminId;
+        $("#admin-id").val(adminId);
+        $.get("/console/admin/permission.v", {adminId: adminId}, function(resp){
+          $("#admin-permission-body").html(resp);
+        });
+      })
+
+      // 保存管理员权限
+      $("#btn-edit-admin-permission-save").on("click", function () {
+        // 组装权限数据
+        var permissions = [];
+        var pickPerms = $("#admin-permission-body .form-check");
+        pickPerms.each(function(i, e) {
+          var isCheck = $(e).children("input[type='checkbox']").prop("checked");
+          if (isCheck) {
+            var perm = {
+              id: $(e).children("input[type='checkbox']").val(),
+              path: $(e).children("input[type='hidden']").val()
+            };
+            permissions.push(perm);
+          }
+        });
+        
+        var req = {
+          adminId: $("#admin-id").val(),
+          permissions: JSON.stringify(permissions),
+        };
+        postJson("/console/admin_permission/update_admin_permission", req, function(resp){
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          alertSucc("编辑权限成功");
+          $("#modal-edit-admin-permission").modal("hide");
+        });
+      })
+    </script>
+  </body>
+</html>

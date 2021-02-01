@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('意见反馈')"></head>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <div class="text-center container my-main-top">
+      <div class="form-group">
+        <label class="h4 mt-5" for="feedback-content">意见反馈</label>
+        <select class="custom-select my-2" id="feedback-type">
+          <option value selected>--反馈类型--</option>
+          <option th:each="type : ${feedbackTypes}" th:value="${type.code}" th:text="${type.value}"></option>
+        </select>
+        <textarea class="form-control" id="feedback-content" rows="5" maxlength="1024"></textarea>
+      </div>
+      <button class="btn btn-dark" id="feedback-submit">提交</button>
+    </div>
+
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <script type="text/javascript">
+      // 提交反馈
+      $("#feedback-submit").on("click", function () {
+        var req = {
+          type: $("#feedback-type").val(),
+          content: $("#feedback-content").val(),
+        };
+        if (isEmpty(req.type)) {
+          alertFail("请选择反馈类型");
+          return;
+        }
+        if (isEmpty(req.content)) {
+          alertFail("请输入反馈内容");
+          return;
+        }
+        postJson("/api/feedback/submit", req, function (resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          $("#feedback-type").val("");
+          $("#feedback-content").val("");
+          alertSucc("哦吼~没想到真的有人会反馈，我要不要假装没看见呢？");
+        });
+      });
+    </script>
+  </body>
+</html>

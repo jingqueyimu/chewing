@@ -1,0 +1,13 @@
+[
+    {
+        "tableName": "t_site_config",
+        "initKey": "site_config_20210110",
+        "colKeys": "['code']",
+        "maps": [
+            {
+                "cols": "(id, code, name, content, description, public_flag)",
+                "vals": "(NULL, 'site_record_no', '网站备案号', '<a href=\"https://beian.miit.gov.cn\" class=\"ml-2\" target=\"_blank\">备案号</a>', '网站备案号', true)"
+            }
+        ]
+    }
+]

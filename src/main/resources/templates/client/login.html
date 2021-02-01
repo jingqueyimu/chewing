@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('登录')"></head>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <div class="text-center my-main-top">
+      <img class="my-login-logo mt-5" src="/images/logo.jpg" alt="Chewing" width="72" height="72">
+      <form class="my-form-signin" id="login">
+        <h1 class="h3 mb-3 font-weight-normal">密码登录</h1>
+        <input type="text" name="account" id="account" class="form-control" placeholder="用户名/手机号/邮箱" maxlength="32" required autofocus>
+        <input type="password" name="password" id="password" class="form-control mb-3" placeholder="密码" maxlength="16" required>
+        <div class="checkbox mb-3">
+          <label> <input type="checkbox" id="remember-me" checked> 记住我 </label>
+        </div>
+        <button class="btn btn-lg btn-dark btn-block" type="button" onclick="login()">
+          登录
+        </button>
+      </form>
+    </div>
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <script type="text/javascript">
+      // 按下enter键
+      document.onkeydown = function(e) {
+        if (e.keyCode == 13) {
+          login();
+        }
+      }
+      
+      // 登录
+      function login() {
+        // 请求参数
+        var req = {
+          account: $("#account").val(),
+          password: $("#password").val(),
+          loginType: 1,
+          rememberMe: $("#remember-me").prop("checked"),
+        };
+        // 参数校验
+        if (isEmpty(req.account)) {
+          alertFail("请输入账号");
+          return;
+        }
+        if (isEmpty(req.password)) {
+          alertFail("请输入密码");
+          return;
+        }
+        if (isEmpty(req.loginType)) {
+          alertFail("请选择登录方式");
+          return;
+        }
+        // 发起请求
+        postJson("/user/login", req, function (resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          location.href = "/index.v";
+        });
+      }
+    </script>
+  </body>
+</html>

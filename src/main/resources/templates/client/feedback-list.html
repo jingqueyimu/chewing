@@ -1,0 +1,43 @@
+<div class="accordion my-btn-setting" id="accordion-feedback-parent">
+  <div th:each="f : ${pageInfo?.list}" class="card">
+    <div class="card-header bg-white shadow" th:id="'heading-feedback-' + ${f.id}">
+      <div class="btn btn-block text-left text-secondary" data-toggle="collapse" th:data-target="'#collapse-feedback-' + ${f.id}" aria-expanded="true" th:aria-controls="'collapse-feedback-' + ${f.id}">
+        [[${f.content}]]
+        <div class="float-right">
+          <span th:text="${#dates.format(f.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span>
+          <i class="bi bi-caret-down-fill float-right ml-2"></i>
+        </div>
+      </div>
+    </div>
+    <div th:id="'collapse-feedback-' + ${f.id}" class="collapse" th:aria-labelledby="'heading-feedback-' + ${f.id}" data-parent="#accordion-feedback-parent">
+      <div th:if="${#strings.isEmpty(f.reply)}" class="card-body text-center text-secondary">
+        暂无回复
+      </div>
+      <div th:unless="${#strings.isEmpty(f.reply)}" class="card-body text-left text-secondary">
+        回复：[[${f.reply}]]
+        <div class="float-right">
+          <span th:text="${#dates.format(f.handleTime,'yyyy-MM-dd HH:mm:ss')}" class="mr-2"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 分页组件 -->
+<nav th:replace="tpl-component::page(${pageInfo}, '/api/feedback/feedback_list.v', ${params}, '#v-pills-feedback')"></nav>
+<ul th:if="${#lists.isEmpty(pageInfo?.list)}" class="list-group">
+  <li class="list-group-item list-group-item-light text-center">
+    您还没有反馈过哟！
+  </li>
+</ul>
+
+<script th:inline="javascript">
+  var serverUrl = [[${serverUrl}]];
+  // 打开折叠事件
+  $("#accordion-feedback-parent .collapse").on("show.bs.collapse", function (event) {
+    $(this).parents(".card").find("i").removeClass("bi-caret-down-fill").addClass("bi-caret-up-fill");
+  })
+  // 关闭折叠事件
+  $("#accordion-feedback-parent .collapse").on("hide.bs.collapse", function (event) {
+    $(this).parents(".card").find("i").removeClass("bi-caret-up-fill").addClass("bi-caret-down-fill");
+  })
+</script>

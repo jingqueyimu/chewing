@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('个人信息')"></head>
+
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav aria-label="breadcrumb" class="mt-2">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active">个人信息</li>
+            </ol>
+          </nav>
+          <!-- 个人信息 -->
+          <div class="container-fluid border rounded py-3">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <input type="file" class="d-none" id="admin-avatar">
+                <label for="admin-avatar">
+                  <img th:src="${serverUrl + currAdmin?.avatar}" class="rounded my-admin-avatar" alt="头像" style="
+                      width: 5rem;
+                      height: 5rem;
+                      border-radius: 0.9rem;
+                      cursor: pointer;
+                    ">
+                </label>
+              </div>
+              <div class="col-md-6">密码：<a href="#" data-toggle="modal" data-target="#modal-edit-admin-passwrod">更换密码</a></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">账户名：<span th:text="${currAdmin?.name}"></span></div>
+              <div class="col-md-6">姓名：<span th:text="${currAdmin?.realName}"></span></div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">手机号：<span th:text="${currAdmin?.mobile}"></span></div>
+              <div class="col-md-6">邮箱：<span th:text="${currAdmin?.email}"></span></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!-- 更换密码 -->
+    <div class="modal fade" id="modal-edit-admin-passwrod" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-admin-passwrod" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-edit-admin-passwrod">更换密码</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <input type="password" class="form-control mb-2" name="oldPassword" placeholder="原密码">
+              <input type="password" class="form-control mb-2" name="newPassword" placeholder="新密码">
+              <input type="password" class="form-control" name="rePassword" placeholder="确认密码">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-save-admin-password">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      var serverUrl = [[${serverUrl}]];
+      // 更新头像
+      $("#admin-avatar").on("change", function(){
+        uploadFile("#admin-avatar", function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          var avatarUrl = serverUrl + resp.data;
+          var req = {
+            avatar: resp.data
+          }
+          postJson("/console/admin/update_admin_avatar", req, function(resp) {
+            if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+            }
+            $("#admin-avatar").next().children("img").attr("src", avatarUrl);
+          });
+        });
+      });
+
+      // 更换密码
+      $("#btn-save-admin-password").on("click", function () {
+         var req = {
+           oldPassword: $("input[name='oldPassword']").val(),
+           newPassword: $("input[name='newPassword']").val(),
+           rePassword: $("input[name='rePassword']").val()
+         };
+         if (isEmpty(req.oldPassword)) {
+           alertFail("请输入原密码");
+           return;
+         }
+         if (isEmpty(req.newPassword)) {
+           alertFail("请输入新密码");
+           return;
+         }
+         if (isEmpty(req.rePassword)) {
+           alertFail("请输入确认密码");
+           return;
+         }
+         postJson("/console/admin/update_admin_password", req, function(resp) {
+           if (!isSucc(resp)) {
+             alertFail(resp.msg);
+             return;
+           }
+           alertSucc("更换密码成功");
+           $("#modal-edit-admin-passwrod").modal("hide");
+         });
+      });
+    </script>
+  </body>
+</html>

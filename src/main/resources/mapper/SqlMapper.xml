@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jingqueyimu.mapper.SqlMapper">
+    <insert id="insert" parameterType="java.lang.String">
+        ${value}
+    </insert>
+    <delete id="delete" parameterType="java.lang.String">
+        ${value}
+    </delete>
+    <update id="update" parameterType="java.lang.String">
+        ${value}
+    </update>
+    <select id="select" parameterType="java.lang.String" resultType="java.util.HashMap">
+        ${value}
+    </select>
+    <select id="count" parameterType="java.lang.String" resultType="java.lang.Integer">
+        ${value}
+    </select>
+</mapper>

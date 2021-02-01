@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('注册')"> </head>
+
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <div class="text-center my-main-top">
+      <img class="my-login-logo mt-5" src="/images/logo.jpg" alt="Chewing" width="72" height="72">
+      <form class="my-form-signin" id="register">
+        <input type="hidden" value="false" id="is-get-code">
+        <h1 class="h3 mb-3 font-weight-normal">账户注册</h1>
+        <input type="text" name="username" id="username" class="form-control" placeholder="用户名" maxlength="32" required autofocus>
+        <div class="input-group">
+          <input type="text" name="email" id="email" class="form-control" placeholder="邮箱" maxlength="32" required>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" style="font-size: 12px" type="button" id="btn-get-code" onclick="sendCode()">
+              获取验证码
+            </button>
+          </div>
+        </div>
+        <input type="text" name="verificationCode" id="v-code" class="form-control" placeholder="邮箱验证码" maxlength="10" required>
+        <input type="password" name="password" id="password" class="form-control" placeholder="密码" maxlength="16" required>
+        <input type="password" name="rePassword" id="re-password" class="form-control mb-3" placeholder="确认密码" maxlength="16" required>
+        <button class="btn btn-lg btn-dark btn-block" type="button" onclick="register()">
+          注册
+        </button>
+      </form>
+    </div>
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <script type="text/javascript">
+      // 按下enter键
+      document.onkeydown = function(e) {
+        if (e.keyCode == 13) {
+          register();
+        }
+      }
+    
+      // 发送验证码
+      function sendCode() {
+        var registerType = 2;
+        // TODO 手机号注册
+        if (registerType == 1) {
+          
+        // 邮箱注册
+        } else if (registerType == 2) {
+          sendEmailCode();
+        }
+      }
+
+      // 发送邮箱验证码
+      function sendEmailCode() {
+        var req = {
+          email: $("#email").val(),
+        };
+        if (isEmpty(req.email)) {
+          alertFail("请输入邮箱");
+          return;
+        }
+        postJson("/email/send_email_code", req, function (resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          // 倒计时60秒
+          countDown($("#btn-get-code"), 60);
+          $("#v-code").focus();
+          $("#is-get-code").val(true);
+        });
+      }
+
+      // 注册
+      function register() {
+        var req = {
+          username: $("#username").val(),
+          email: $("#email").val(),
+          emailCode: $("#v-code").val(),
+          password: $("#password").val(),
+          rePassword: $("#re-password").val(),
+          registerType: 2,
+        };
+        if (isEmpty(req.username)) {
+          alertFail("请输入用户名");
+          return;
+        }
+        if (isEmpty(req.email)) {
+          alertFail("请输入邮箱");
+          return;
+        }
+        var isGetCode = $("#is-get-code").val();
+        if (isGetCode == "false") {
+          alertFail("请先获取验证码");
+          return;
+        }
+        if (isEmpty(req.emailCode)) {
+          alertFail("请输入邮箱验证码");
+          return;
+        }
+        if (isEmpty(req.password)) {
+          alertFail("请输入密码");
+          return;
+        }
+        if (isEmpty(req.rePassword)) {
+          alertFail("请输入确认密码");
+          return;
+        }
+        if (isEmpty(req.registerType)) {
+          alertFail("请选择注册方式");
+          return;
+        }
+        postJson("/user/register", req, function (resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          location.href = "/index.v";
+        });
+      }
+    </script>
+  </body>
+</html>

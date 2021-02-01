@@ -1,0 +1,61 @@
+<div class="container-fluid">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" style="width: 15%">权限分组</th>
+        <th scope="col">权限名称<span class="float-right"><input type="checkbox" id="check-all" class="mr-1">全选</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="pg : ${permissionGroups}" class="perm-group">
+        <th scope="row"><input type="checkbox" class="mr-1">[[${pg.value}]]</th>
+        <td>
+          <div th:each="p : ${permissionData[pg.code]}" class="form-check form-check-inline">
+            <input type="hidden" th:value="${p.path}">
+            <input class="form-check-input" type="checkbox" th:checked="${p.accessFlag}" th:value="${p.id}">
+            <label class="form-check-label">[[${p.name}]]</label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<script type="text/javascript">
+  $(function () {
+    // 初始化所有权限复选框选中状态
+    var checkboxCount = $(".form-check-input[type='checkbox']").length;
+    var checkCount = $(".form-check-input:checked").length;  
+    if (checkboxCount == checkCount) {
+      $("#check-all").prop("checked", true);
+    }
+    // 初始化分组权限复选框选中状态
+    $(".perm-group").each(function(i, e) {
+      checkboxCount = $(e).find(".form-check-input[type='checkbox']").length;
+      checkCount = $(e).find(".form-check-input:checked").length;
+      // 权限名称下复选框数量与选中的数量相等,则勾选权限分组的复选框
+      if (checkboxCount == checkCount) {
+        $(e).children("th").children("input").prop("checked", true);
+      }
+    });
+  });
+
+  // 所有权限全选
+  $("#check-all").on("click", function () {
+    var isCheck = $(this).prop("checked");
+    if (isCheck) {
+      $(".perm-group input[type='checkbox']").prop("checked", true);
+    } else {
+      $(".perm-group input[type='checkbox']").prop("checked", false);
+    }
+  });
+  
+  // 分组权限全选
+  $(".perm-group th input[type='checkbox']").on("click", function() {
+    var isCheck = $(this).prop("checked");
+    if (isCheck) {
+      $(this).parents(".perm-group").find(".form-check-input").prop("checked", true);
+    } else {
+      $(this).parents(".perm-group").find(".form-check-input").prop("checked", false);
+    }
+  });
+</script>

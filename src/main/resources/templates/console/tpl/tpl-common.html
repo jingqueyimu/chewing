@@ -1,0 +1,128 @@
+<!-- 头部模板 -->
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title th:text="${title}"></title>
+  <!-- 网站上显示logo图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+  <!-- 收藏用logo图标 -->
+  <link rel="bookmark" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/bootstrap/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/css/console.css">
+  <script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/popper/popper.min.js"></script>
+  <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/laydate/laydate.js"></script>
+  <!-- http://momentjs.cn/ -->
+  <script type="text/javascript" src="/js/moment/moment.min.js"></script>
+  <!-- https://feathericons.com/ -->
+  <script type="text/javascript" src="/js/feather-icons/feather.min.js"></script>
+  <!-- https://chartjs.bootcss.com/ -->
+  <script type="text/javascript" src="/js/chart/chart.min.js"></script>
+  <script type="text/javascript" src="/js/common.js"></script>
+  <script type="text/javascript" src="/js/console.js"></script>
+</head>
+
+<!-- 顶部模板 -->
+<nav th:fragment="top">
+  <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow text-left" style="line-height: 2rem">
+    <a class="navbar-brand navbar-brand-bg col-md-3 col-lg-2 mr-0 px-3" href="#">Chewing</a>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="切换导航">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="nav px-3 justify-content-end my-nav">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="#dropdown-admin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          [[${currAdmin?.name}]]
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-admin">
+          <a class="dropdown-item" href="/console/admin/info.v">个人信息</a>
+          <a class="dropdown-item" href="#" onclick="logout()">退出</a>
+        </div>
+      </li>
+    </ul>
+    <script type="text/javascript">
+      // 登出
+      function logout() {
+        postJson("/console/admin/logout", {}, function (resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+          } else {
+            location.href = "/console/login.v";
+          }
+        });
+      }
+    </script>
+  </nav>
+  <!-- 提示窗 -->
+  <div class="alert alert-secondary text-center" role="alert" style="display: none; position: fixed; z-index: 2222; width: 100%; top: 0;" id="alertTips">
+    <input type="hidden">
+    <strong></strong>
+    <button type="button" class="close" onclick="$('#alertTips').fadeOut();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</nav>
+
+<!-- 左侧模板 -->
+<nav th:fragment="left(item)" id="sidebar-menu" class="col-md-3 col-lg-2 bg-light sidebar collapse show">
+  <div class="sidebar-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/index.v')}" th:class="'nav-link' + ${item == 'home' ? ' active' : ''}" href="/console/index.v">
+          <i data-feather="home"></i>
+          首页
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/user/list.v')}" th:class="'nav-link' + ${item == 'user' ? ' active' : ''}" href="/console/user/list.v">
+          <i data-feather="users"></i>
+          用户管理
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/product/list.v')}" th:class="'nav-link' + ${item == 'product' ? ' active' : ''}" href="/console/product/list.v">
+          <i data-feather="shopping-cart"></i>
+          产品管理
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/order/list.v')}" th:class="'nav-link' + ${item == 'order' ? ' active' : ''}" href="/console/order/list.v">
+          <i data-feather="file"></i>
+          订单管理
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/feedback/list.v')}" th:class="'nav-link' + ${item == 'feedback' ? ' active' : ''}" href="/console/feedback/list.v">
+          <i data-feather="file-text"></i>
+          反馈管理
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/admin/list.v')}" th:class="'nav-link' + ${item == 'admin' ? ' active' : ''}" href="/console/admin/list.v">
+          <i data-feather="user"></i>
+          管理员管理
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:if="${#lists.contains(permissionPaths, '/console/site_config/list.v')}" th:class="'nav-link' + ${item == 'system' ? ' active' : ''}" href="/console/site_config/list.v">
+          <i data-feather="settings"></i>
+          系统管理
+        </a>
+      </li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+    feather.replace();
+    // 打开折叠事件
+    $("#sidebar-menu").on("show.bs.collapse", function (event) {
+      $("main").addClass("col-md-9 ml-sm-auto col-lg-10").removeClass("w-100").css("max-width", "");
+    });
+    // 关闭折叠事件
+    $("#sidebar-menu").on("hide.bs.collapse", function (event) {
+      $("main").removeClass("col-md-9 ml-sm-auto col-lg-10").addClass("w-100").css("max-width", "100%");
+    });
+  </script>
+</nav>

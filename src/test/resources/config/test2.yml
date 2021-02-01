@@ -1,0 +1,8 @@
+test: 
+  value: yaml配置测试
+  person: 
+    name: 张三
+    age: 22
+  dog: 
+    name: 大黄
+    age: 2

@@ -1,0 +1,362 @@
+<div class="accordion my-btn-setting" id="accordion-setting-parent">
+  <!-- 头像 -->
+  <div class="card">
+    <div class="card-header bg-white shadow" id="heading-avatar">
+      <div class="btn btn-block text-left text-secondary" data-toggle="collapse" data-target="#collapse-avatar" aria-expanded="true" aria-controls="collapse-avatar">
+        头像：<img class="my-avatar rounded" th:src="${serverUrl + currUser?.avatar}" alt="用户头像">
+        <i class="bi bi-caret-down-fill float-right"></i>
+      </div>
+    </div>
+    <div id="collapse-avatar" class="collapse" aria-labelledby="heading-avatar" data-parent="#accordion-setting-parent">
+      <div class="card-body">
+        <div class="custom-file mb-2">
+          <input type="hidden" id="new-avatar-url">
+          <input type="file" class="custom-file-input" id="new-avatar">
+          <label class="custom-file-label" for="new-avatar">选择文件</label>
+        </div>
+        <button class="btn btn-primary" type="button" id="save-avatar">
+          更换头像
+        </button>
+        <button class="btn btn-outline-primary" type="button" id="cancel-avatar">
+          取消
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 用户名 -->
+  <div class="card">
+    <div class="card-header bg-white shadow" id="heading-username">
+      <div class="btn btn-block text-left text-secondary" data-toggle="collapse" data-target="#collapse-username" aria-expanded="true" aria-controls="collapse-username">
+        用户名：<span>[[${currUser?.username}]]</span>
+        <i class="bi bi-caret-down-fill float-right"></i>
+      </div>
+    </div>
+    <div id="collapse-username" class="collapse" aria-labelledby="heading-username" data-parent="#accordion-setting-parent">
+      <div class="card-body">
+        <input type="text" id="new-username" class="form-control mb-2" placeholder="新用户名" maxlength="16">
+        <button class="btn btn-primary" type="button" id="save-username">
+          更换用户名
+        </button>
+        <button class="btn btn-outline-primary" type="button" id="cancel-username">
+          取消
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 密码 -->
+  <div class="card">
+    <div class="card-header bg-white shadow" id="heading-password">
+      <div class="btn btn-block text-left text-secondary collapsed" data-toggle="collapse" data-target="#collapse-password" aria-expanded="false" aria-controls="collapse-password">
+        密码：<span>******</span>
+        <i class="bi bi-caret-down-fill float-right"></i>
+      </div>
+    </div>
+    <div id="collapse-password" class="collapse" aria-labelledby="heading-password" data-parent="#accordion-setting-parent">
+      <div class="card-body">
+        <input type="password" id="old-password" class="form-control mb-2" placeholder="原密码" maxlength="16">
+        <input type="password" id="new-password" class="form-control mb-2" placeholder="新密码" maxlength="16">
+        <input type="password" id="re-password" class="form-control mb-2" placeholder="确认密码" maxlength="16">
+        <button class="btn btn-primary" type="button" id="save-password">
+          更换密码
+        </button>
+        <button class="btn btn-outline-primary" type="button" id="cancel-password">
+          取消
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 邮箱 -->
+  <div class="card">
+    <div class="card-header bg-white shadow" id="heading-email">
+      <div class="btn btn-block text-left text-secondary collapsed" data-toggle="collapse" data-target="#collapse-email" aria-expanded="false" aria-controls="collapse-email">
+        邮箱：<span>[[${currUser?.email}]]</span>
+        <i class="bi bi-caret-down-fill float-right"></i>
+      </div>
+    </div>
+    <div id="collapse-email" class="collapse" aria-labelledby="heading-email" data-parent="#accordion-setting-parent">
+      <div class="card-body">
+        <input type="hidden" value="false" id="is-get-email-code">
+        <input type="text" id="bind-email" class="form-control mb-2" th:placeholder="${#strings.isEmpty(currUser?.email) ? '邮箱' : '新邮箱'}" maxlength="32">
+        <div class="input-group mb-2">
+          <input type="text" id="email-code" class="form-control" placeholder="验证码" maxlength="10">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" id="get-email-code">
+              获取验证码
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="button" id="save-email">
+          绑定邮箱
+        </button>
+        <button class="btn btn-outline-primary" type="button" id="cancel-email">
+          取消
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 手机号 -->
+  <div class="card">
+    <div class="card-header bg-white shadow" id="heading-mobile">
+      <div class="btn btn-block text-left text-secondary collapsed" data-toggle="collapse" data-target="#collapse-mobile" aria-expanded="false" aria-controls="collapse-mobile">
+        手机号：<span>[[${currUser?.mobile}]]</span>
+        <i class="bi bi-caret-down-fill float-right"></i>
+      </div>
+    </div>
+    <div id="collapse-mobile" class="collapse" aria-labelledby="heading-mobile" data-parent="#accordion-setting-parent">
+      <div class="card-body">
+        <input type="hidden" value="false" id="is-get-sms-code">
+        <input type="text" id="bind-mobile" class="form-control mb-2" th:placeholder="${#strings.isEmpty(currUser?.mobile) ? '手机号' : '新手机号'}" maxlength="11">
+        <div class="input-group mb-2">
+          <input type="text" id="sms-code" class="form-control" placeholder="验证码" maxlength="10">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" id="get-sms-code">
+              获取验证码
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="button" id="save-mobile">
+          绑定手机号
+        </button>
+        <button class="btn btn-outline-primary" type="button" id="cancel-mobile">
+          取消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+  var serverUrl = [[${serverUrl}]];
+  // 打开折叠事件
+  $("#accordion-setting-parent .collapse").on("show.bs.collapse", function (event) {
+    $(this).parents(".card").find("i").removeClass("bi-caret-down-fill").addClass("bi-caret-up-fill");
+  })
+  // 关闭折叠事件
+  $("#accordion-setting-parent .collapse").on("hide.bs.collapse", function (event) {
+    $(this).parents(".card").find("i").removeClass("bi-caret-up-fill").addClass("bi-caret-down-fill");
+  })
+
+  // 更换头像-选择文件
+  $("#new-avatar").on("change", function() {
+    uploadFile("#new-avatar", function(resp) {
+      if (!isSucc(resp)) {
+        alertFail(resp.msg);
+        return;
+      }
+      $("#new-avatar-url").val(resp.data);
+      fileChangeEcho("#new-avatar");
+    });
+  });
+
+  // 更换头像
+  $("#save-avatar").on("click", function () {
+    var req = {
+      avatar: $("#new-avatar-url").val()
+    };
+    if (isEmpty(req.avatar)) {
+      alertFail("请选择头像");
+      return;
+    }
+    postJson("/api/user/update_user_info", req, function(resp) {
+      if (!isSucc(resp)) {
+        alertFail(resp.msg);
+        return;
+      }
+      $("#collapse-avatar input").val("");
+      $("#collapse-avatar .custom-file-label").html("选择文件");
+      $("#collapse-avatar").parent().find("img").attr("src", serverUrl + req.avatar);
+      $("#uc-avatar").attr("src", serverUrl + req.avatar);
+      $("#heading-avatar i").click();
+      alertSucc("新头像有点好看啊~");
+    });
+  });
+
+  // 取消更换头像
+  $("#cancel-avatar").on("click", function () {
+    $("#collapse-avatar input").val("");
+    $("#collapse-avatar .custom-file-label").html("选择文件");
+    $("#heading-avatar i").click();
+  });
+
+  // 更换用户名
+  $("#save-username").on("click", function () {
+    var req = {
+      username: $("#new-username").val()
+    };
+      if (isEmpty(req.username)) {
+        alertFail("请输入用户名");
+        return;
+      }
+      postJson("/api/user/update_user_info", req, function(resp) {
+       if (!isSucc(resp)) {
+         alertFail(resp.msg);
+         return;
+       }
+       $("#collapse-username input").val("");
+       $("#collapse-username").parent().find("span").text(req.username);
+       $("#uc-username").text(req.username);
+       $("#heading-username i").click();
+       alertSucc("哎呦~这用户名不错噢！");
+      });
+   });
+
+  // 取消更换用户名
+  $("#cancel-username").on("click", function () {
+    $("#collapse-username input").val("");
+    $("#heading-username i").click();
+  });
+
+   // 更换密码
+   $("#save-password").on("click", function () {
+      var req = {
+        oldPassword: $("#old-password").val(),
+        newPassword: $("#new-password").val(),
+        rePassword: $("#re-password").val()
+      };
+      if (isEmpty(req.oldPassword)) {
+        alertFail("请输入原密码");
+        return;
+      }
+      if (isEmpty(req.newPassword)) {
+        alertFail("请输入新密码");
+        return;
+      }
+      if (isEmpty(req.rePassword)) {
+        alertFail("请输入确认密码");
+        return;
+      }
+      postJson("/api/user/update_user_password", req, function(resp) {
+        if (!isSucc(resp)) {
+          alertFail(resp.msg);
+          return;
+        }
+        $("#collapse-password input").val("");
+        $("#heading-password i").click();
+        alertSucc("嗯~定时更换密码是个好习惯！");
+      });
+   });
+
+   // 取消更换密码
+   $("#cancel-password").on("click", function () {
+     $("#collapse-password input").val("");
+     $("#heading-password i").click();
+   });
+
+   // 更换邮箱
+   $("#save-email").on("click", function () {
+      var req = {
+        email: $("#bind-email").val(),
+        emailCode: $("#email-code").val()
+      };
+      if (isEmpty(req.email)) {
+        alertFail("请输入邮箱");
+        return;
+      }
+      var isGetCode = $("#is-get-email-code").val();
+      if (isGetCode == "false") {
+        alertFail("请先获取验证码");
+        return;
+      }
+      if (isEmpty(req.emailCode)) {
+        alertFail("请输入验证码");
+        return;
+      }
+      postJson("/api/user/update_user_email", req, function(resp) {
+        if (!isSucc(resp)) {
+          alertFail(resp.msg);
+          return;
+        }
+        $("#collapse-email input").val("");
+        $("#collapse-email").parent().find("span").text(req.email);
+        $("#heading-email i").click();
+        alertSucc("邮箱绑定成功啦！");
+      });
+   });
+
+   // 发送邮箱验证码
+   $("#get-email-code").on("click", function() {
+     var req = {
+       email: $("#bind-email").val(),
+     };
+     if (isEmpty(req.email)) {
+       alertFail("请输入新邮箱");
+       return;
+     }
+     postJson("/email/send_email_code", req, function (resp) {
+       if (!isSucc(resp)) {
+         alertFail(resp.msg);
+         return;
+       }
+       // 倒计时60秒
+       countDown($("#get-email-code"), 60, "#007bff");
+       $("#email-code").focus();
+       $("#is-get-email-code").val(true);
+     });
+   });
+
+   // 取消绑定邮箱
+   $("#cancel-email").on("click", function () {
+     $("#collapse-email input").val("");
+     $("#heading-email i").click();
+   });
+
+   // 更换手机号
+   $("#save-mobile").on("click", function () {
+      var req = {
+        mobile: $("#bind-mobile").val(),
+        smsCode: $("#sms-code").val()
+      };
+      if (isEmpty(req.mobile)) {
+        alertFail("请输入手机号");
+        return;
+      }
+      var isGetCode = $("#is-get-sms-code").val();
+      if (isGetCode == "false") {
+        alertFail("请先获取验证码");
+        return;
+      }
+      if (isEmpty(req.smsCode)) {
+        alertFail("请输入验证码");
+        return;
+      }
+      postJson("/api/user/update_user_mobile", req, function(resp) {
+        if (!isSucc(resp)) {
+          alertFail(resp.msg);
+          return;
+        }
+        $("#collapse-mobile input").val("");
+        $("#collapse-mobile").parent().find("span").text(req.mobile);
+        $("#heading-mobile i").click();
+        alertSucc("手机号绑定成功啦！");
+      });
+   });
+
+   // 发送短信验证码
+   $("#get-sms-code").on("click", function() {
+     var req = {
+       mobile: $("#bind-mobile").val(),
+     };
+     if (isEmpty(req.mobile)) {
+       alertFail("请输入手机号");
+       return;
+     }
+     postJson("/sms/send_sms_code", req, function (resp) {
+       if (!isSucc(resp)) {
+         alertFail(resp.msg);
+         return;
+       }
+       // 倒计时60秒
+       countDown($("#get-sms-code"), 60, "#007bff");
+       $("#sms-code").focus();
+       $("#is-get-sms-code").val(true);
+     });
+   });
+
+   // 取消绑定手机号
+   $("#cancel-mobile").on("click", function () {
+     $("#collapse-mobile input").val("");
+     $("#heading-mobile i").click();
+   });
+</script>

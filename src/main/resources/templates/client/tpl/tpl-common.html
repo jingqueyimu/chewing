@@ -1,0 +1,113 @@
+<!-- 头部模板 -->
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="keywords" content="">
+  <meta name="description" content="Chewing——Java 项目快速开发脚手架！">
+  <title th:text="${title}"></title>
+  <!-- 网站上显示logo图标 -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+  <!-- 收藏用logo图标 -->
+  <link rel="bookmark" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/bootstrap/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/css/client.css">
+  <script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/popper/popper.min.js"></script>
+  <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/laydate/laydate.js"></script>
+  <!-- http://momentjs.cn/ -->
+  <script type="text/javascript" src="/js/moment/moment.min.js"></script>
+  <script type="text/javascript" src="/js/common.js"></script>
+  <script type="text/javascript" src="/js/client.js"></script>
+</head>
+
+<!-- 顶部模板 -->
+<header th:fragment="top" class="fixed-top">
+  <div class="collapse bg-dark" id="navbar-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">关于我们</h4>
+          <p class="text-muted">不知道写什么，以后再写吧！</p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">联系我们</h4>
+          <ul class="list-unstyled text-white">
+            <li>傲娇，没有联系方式！</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container d-flex justify-content-between">
+      <a href="/index.v" class="navbar-brand d-flex align-items-center">
+        <img src="/images/logo.jpg" class="my-navbar-logo">
+        <strong>Chewing</strong>
+      </a>
+      <div>
+        <a href="/index.v" class="btn btn-light">首页</a>
+        <div th:if="${currUser != null}" class="btn-group">
+          <a class="btn btn-light" href="/api/user/center.v">
+            <i class="bi bi-person-circle" style="font-size: 1.2rem; line-height: 1.2rem"></i>
+          </a>
+          <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only"></span>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/api/user/center.v">个人中心</a>
+            <a class="dropdown-item" href="/api/feedback/index.v">意见反馈</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" onclick="logout()">退出</a>
+          </div>
+        </div>
+        <a th:if="${currUser == null}" href="/login.v" class="btn btn-light">登录</a>
+        <a th:if="${currUser == null}" href="/register.v" class="btn btn-light">注册</a>
+        <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bi bi-list" style="font-size: 1.5rem; line-height: 1.2rem"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 提示窗 -->
+  <div class="alert alert-secondary text-center" role="alert" style="display: none" id="alertTips">
+    <input type="hidden">
+    <strong></strong>
+    <button type="button" class="close" onclick="$('#alertTips').fadeOut();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <script type="text/javascript">
+    // 登出
+    function logout() {
+      postJson("/user/logout", {}, function (resp) {
+        if (!isSucc(resp)) {
+          alertFail(resp.msg);
+        } else {
+          location.href = "/index.v";
+        }
+      });
+    }
+  </script>
+</header>
+
+<!-- 底部模板 -->
+<footer th:fragment="bottom" class="text-muted">
+  <div class="container">
+    <p class="float-right"><a href="#">回到顶部</a></p>
+    <p>个人博客：<a href="https://www.jingqueyimu.com" target="_blank">惊却一目</a>。欢迎交流~</p>
+  </div>
+  <p class="text-center mt-3">&copy; 2020<span id="site-record-no"></span></p>
+  <script type="text/javascript">
+    $(function () {
+      // 网站备案号
+      postJson("/site_config/get", { code: "site_record_no" }, function (resp) {
+        if (!isEmpty(resp.data)) {
+          $("#site-record-no").html(resp.data.content);
+        }
+      });
+    });
+  </script>
+</footer>

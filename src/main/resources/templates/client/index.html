@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- 需要加上 xmlns:th="http://www.thymeleaf.org, 否则th标签会报错-->
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('首页')"></head>
+  <style>
+    .jumbotron {
+      padding-top: 7rem !important;
+      margin-bottom: 0rem !important;
+    }
+  </style>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <main role="main">
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1>Chewing</h1>
+          <p class="lead text-muted">Java 项目快速开发脚手架！</p>
+        </div>
+      </section>
+      <div class="py-5 bg-light">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="bd-placeholder-img card-img-top border-bottom" style="width: 100%; height: 210px;">
+                  <img src="/images/demo/demo.jpg" style="width: 100%; height: 100%;">
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <a href="#">Java 项目快速开发脚手架！</a>
+                  </p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">2020-12-12</small>
+                    <small class="text-muted">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" style="padding-top: 0.1rem; padding-bottom: 0.35rem">
+                        <i class="bi bi-star"></i>
+                      </button>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="bd-placeholder-img card-img-top border-bottom" style="width: 100%; height: 210px;">
+                  <img src="/images/demo/demo.jpg" style="width: 100%; height: 100%;">
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <a href="#">Java 项目快速开发脚手架！</a>
+                  </p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">2020-12-12</small>
+                    <small class="text-muted">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" style="padding-top: 0.1rem; padding-bottom: 0.35rem">
+                        <i class="bi bi-star"></i>
+                      </button>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card mb-4 shadow-sm">
+                <div class="bd-placeholder-img card-img-top border-bottom" style="width: 100%; height: 210px;">
+                  <img src="/images/demo/demo.jpg" style="width: 100%; height: 100%;">
+                </div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <a href="#">Java 项目快速开发脚手架！</a>
+                  </p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">2020-12-12</small>
+                    <small class="text-muted">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" style="padding-top: 0.1rem; padding-bottom: 0.35rem">
+                        <i class="bi bi-star"></i>
+                      </button>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <script type="text/javascript">
+    </script>
+  </body>
+</html>

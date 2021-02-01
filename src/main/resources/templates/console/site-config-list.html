@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('网站配置列表')"></head>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('system')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::system-top('site-config-list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="name_like" th:value="${params?.get('name_like')}" placeholder="配置名称">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="publicFlag">
+                  <option value th:selected="${params?.get('publicFlag')} == ''">--是否公开--</option>
+                  <option value="true" th:selected="${params?.get('publicFlag') == true}">是</option>
+                  <option value="false" th:selected="${params?.get('publicFlag') == false}">否</option>
+                </select>
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-site-config">添加配置</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">配置代码</th>
+                  <th scope="col">配置名称</th>
+                  <th scope="col">配置内容</th>
+                  <th scope="col">描述</th>
+                  <th scope="col">是否公开</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="c : ${pageInfo?.list}" th:id="${c.id}">
+                  <th scope="row" th:text="${c.id}"></th>
+                  <td th:text="${c.code}"></td>
+                  <td th:text="${c.name}"></td>
+                  <td th:text="${c.content}"></td>
+                  <td th:text="${c.description}"></td>
+                  <td th:text="${c.publicFlag == true ? '是' : '否'}"></td>
+                  <td>
+                    <a class="text-primary mr-1" href="#" title="编辑" data-toggle="modal" data-target="#modal-edit-site-config" th:data-site-config-id="${c.id}">
+                      <i data-feather="edit"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="7">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/site_config/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <!-- 添加网站配置 -->
+    <div class="modal fade" id="modal-add-site-config" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-add-site-config" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-add-site-config">添加网站配置</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label for="site-config-code" class="col-sm-2 col-form-label">配置代码</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="site-config-code">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-name" class="col-sm-2 col-form-label">配置名称</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="site-config-name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-content" class="col-sm-2 col-form-label">配置内容</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" name="site-config-content" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-description" class="col-sm-2 col-form-label">描述</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="site-config-description">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-public-flag" class="col-sm-2 col-form-label">公开</label>
+                <div class="col-sm-10">
+                  <select class="custom-select mr-sm-2" name="site-config-public-flag">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-add-site-config-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 编辑网站配置 -->
+    <div class="modal fade" id="modal-edit-site-config" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-site-config" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-edit-site-config">编辑网站配置</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label for="site-config-code" class="col-sm-2 col-form-label">配置代码</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="site-config-code" disabled>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-name" class="col-sm-2 col-form-label">配置名称</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="site-config-name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-content" class="col-sm-2 col-form-label">配置内容</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" name="site-config-content" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-description" class="col-sm-2 col-form-label">描述</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="site-config-description">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="site-config-public-flag" class="col-sm-2 col-form-label">公开</label>
+                <div class="col-sm-10">
+                  <select class="custom-select mr-sm-2" name="site-config-public-flag">
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-edit-site-config-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="site-config-id">
+    <script th:inline="javascript">
+      feather.replace();
+
+      // 重置
+      $("#btn-reset").on("click", function() {
+        $("#form-search input").val("");
+        $("#form-search select").val("");
+      });
+
+      // 搜索
+      $("#btn-search").on("click", function() {
+        pageSearch("/console/site_config/list.v", [[${pageInfo}]], "#form-search", [], ["publicFlag"]);
+      });
+
+      // 编辑网站配置
+      $("#modal-edit-site-config").on("show.bs.modal", function (event) {
+        var siteConfigId = event.relatedTarget.dataset.siteConfigId;
+        postJson("/console/site_config/get", {id: siteConfigId}, function(resp){
+          if (!isSucc(resp)) {
+            alert(resp.msg);
+            return;
+          }
+          var siteConfig = resp.data;
+          $("#site-config-id").val(siteConfig.id);
+          $("#modal-edit-site-config input[name='site-config-code']").val(siteConfig.code);
+          $("#modal-edit-site-config input[name='site-config-name']").val(siteConfig.name);
+          $("#modal-edit-site-config textarea[name='site-config-content']").val(siteConfig.content);
+          $("#modal-edit-site-config input[name='site-config-description']").val(siteConfig.description);
+          $("#modal-edit-site-config select[name='site-config-public-flag']").val(siteConfig.publicFlag + "");
+        });
+      })
+
+      // 保存网站配置
+      $("#btn-edit-site-config-save").on("click", function(){
+        var req = {
+          id: $("#site-config-id").val(),
+          name: $("#modal-edit-site-config input[name='site-config-name']").val(),
+          content: $("#modal-edit-site-config textarea[name='site-config-content']").val(),
+          description: $("#modal-edit-site-config input[name='site-config-description']").val(),
+          publicFlag: $("#modal-edit-site-config select[name='site-config-public-flag']").val()
+        };
+        if (isEmpty(req.id)){
+          alertFail("配置ID不能为空");
+          return;
+        }
+        postJson("/console/site_config/update", req, function(resp) {
+          if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+          }
+          $("#modal-edit-site-config").modal("hide");
+          alertSucc("编辑网站配置成功");
+          // 更新列表数据
+          var siteConfig = resp.data;
+          var siteConfigCols = $("#" + req.id).children();
+          siteConfigCols.eq(2).text(siteConfig.name);
+          siteConfigCols.eq(3).text(siteConfig.content);
+          siteConfigCols.eq(4).text(siteConfig.description);
+          siteConfigCols.eq(5).text(siteConfig.publicFlag ? "是" : "否");
+        });
+      });
+
+      // 添加网站配置
+      $("#btn-add-site-config-save").on("click", function(){
+        var req = {
+          code: $("#modal-add-site-config input[name='site-config-code']").val(),
+          name: $("#modal-add-site-config input[name='site-config-name']").val(),
+          content: $("#modal-add-site-config textarea[name='site-config-content']").val(),
+          description: $("#modal-add-site-config input[name='site-config-description']").val(),
+          publicFlag: $("#modal-add-site-config select[name='site-config-public-flag']").val()
+        };
+        
+        if (isEmpty(req.code)){
+          alertFail("请输入配置代码");
+          return;
+        }
+        if (isEmpty(req.name)){
+          alertFail("请输入配置名称");
+          return;
+        }
+        if (isEmpty(req.content)){
+          alertFail("请输入配置内容");
+          return;
+        }
+        if (isEmpty(req.publicFlag)){
+          alertFail("请选择是否公开访问");
+          return;
+        }
+        postJson("/console/site_config/save", req, function(resp) {
+          if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+          }
+          $("#modal-add-site-config").modal("hide");
+          alertSucc("添加配置成功", function() {
+            location.reload();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

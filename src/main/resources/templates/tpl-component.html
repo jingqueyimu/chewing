@@ -1,0 +1,180 @@
+<!-- 分页组件 -->
+<nav th:fragment="page(pageInfo, url, params, selector)" th:if="${not #lists.isEmpty(pageInfo?.list)}" class="mt-1" style="max-width: 100%" aria-label>
+  <input type="hidden" th:value="${pageInfo.pageNum}" id="pageNum">
+  <input type="hidden" th:value="${pageInfo.pageSize}" id="pageSize">
+  <input type="hidden" th:value="${pageInfo.pages}" id="pages">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="上一页">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li th:if="${pageInfo.pageNum != 1}" class="page-item">
+      <a class="page-link" href="#">1</a>
+    </li>
+    <li th:if="${pageInfo.pageNum > 3}" class="page-item">
+      <a class="page-link" href="#">...</a>
+    </li>
+    <li th:if="${pageInfo.pageNum > 2}" class="page-item">
+      <a class="page-link" href="#" th:text="${pageInfo.pageNum - 1}"></a>
+    </li>
+    <li class="page-item active">
+      <a class="page-link" href="#" th:text="${pageInfo.pageNum}"></a>
+    </li>
+    <li th:if="${pageInfo.pageNum < pageInfo.pages - 1}" class="page-item">
+      <a class="page-link" href="#" th:text="${pageInfo.pageNum + 1}"></a>
+    </li>
+    <li th:if="${pageInfo.pageNum < pageInfo.pages - 2}" class="page-item">
+      <a class="page-link" href="#">...</a>
+    </li>
+    <li th:if="${pageInfo.pageNum != pageInfo.pages}" class="page-item">
+      <a class="page-link" href="#" th:text="${pageInfo.pages}"></a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="下一页">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+  <script th:inline="javascript">
+    $(".pagination>.page-item").on("click", function(event){
+      var text = event.currentTarget.innerText;
+      if (text == "...") {
+          return;
+      }
+      // 要请求的页面地址
+      var url = [[${url}]];
+      // 筛选参数
+      var params = [[${params}]];
+      // 要填充页面的元素的选择器
+      var selector = [[${selector}]];
+      // 当前页
+      var pageNum = parseInt($("#pageNum").val());
+      // 页大小
+      var pageSize = parseInt($("#pageSize").val());
+      // 总页数
+      var pages = parseInt($("#pages").val());
+      
+      // 目标页码
+      var targetPageNum;
+      // 上一页
+      if (text == "«") {
+          targetPageNum = pageNum - 1;
+      // 下一页
+      } else if (text == "»") {
+          targetPageNum = pageNum + 1;
+      } else {
+          targetPageNum = parseInt(text);
+      }
+      if (targetPageNum < 1 || targetPageNum > pages || targetPageNum == pageNum) {
+          return;
+      }
+      var req = {
+        pageNum: targetPageNum,
+        pageSize: pageSize,
+        params: JSON.stringify(params)
+      };
+      // 请求页面
+      $.get(url, req, function (resp) {
+        if (selector == "html") {
+          document.write(resp);
+          document.close();
+        } else {
+        $(selector).html(resp);
+        }
+      });
+    });
+  </script>
+</nav>
+
+<!-- 带数据统计的分页组件 -->
+<nav th:fragment="dspage(pageInfo, url, params, selector)" th:if="${not #lists.isEmpty(pageInfo?.list)}" class="container mt-1" style="max-width: 100%" aria-label>
+  <input type="hidden" th:value="${pageInfo.pageNum}" id="pageNum">
+  <input type="hidden" th:value="${pageInfo.pageSize}" id="pageSize">
+  <input type="hidden" th:value="${pageInfo.pages}" id="pages">
+  <div class="row d-flex justify-content-between">
+      <span class="text-secondary">共 [[${pageInfo?.pages}]] 条记录</span>
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="上一页">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li th:if="${pageInfo.pageNum != 1}" class="page-item">
+          <a class="page-link" href="#">1</a>
+        </li>
+        <li th:if="${pageInfo.pageNum > 3}" class="page-item">
+          <a class="page-link" href="#">...</a>
+        </li>
+        <li th:if="${pageInfo.pageNum > 2}" class="page-item">
+          <a class="page-link" href="#" th:text="${pageInfo.pageNum - 1}"></a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" href="#" th:text="${pageInfo.pageNum}"></a>
+        </li>
+        <li th:if="${pageInfo.pageNum < pageInfo.pages - 1}" class="page-item">
+          <a class="page-link" href="#" th:text="${pageInfo.pageNum + 1}"></a>
+        </li>
+        <li th:if="${pageInfo.pageNum < pageInfo.pages - 2}" class="page-item">
+          <a class="page-link" href="#">...</a>
+        </li>
+        <li th:if="${pageInfo.pageNum != pageInfo.pages}" class="page-item">
+          <a class="page-link" href="#" th:text="${pageInfo.pages}"></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="下一页">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+  </div>
+  <script th:inline="javascript">
+    $(".pagination>.page-item").on("click", function(event){
+      var text = event.currentTarget.innerText;
+      if (text == "...") {
+          return;
+      }
+      // 要请求的页面地址
+      var url = [[${url}]];
+      // 筛选参数
+      var params = [[${params}]];
+      // 要填充页面的元素的选择器
+      var selector = [[${selector}]];
+      // 当前页
+      var pageNum = parseInt($("#pageNum").val());
+      // 页大小
+      var pageSize = parseInt($("#pageSize").val());
+      // 总页数
+      var pages = parseInt($("#pages").val());
+      
+      // 选择的页码
+      var targetPageNum;
+      // 上一页
+      if (text == "«") {
+          targetPageNum = pageNum - 1;
+      // 下一页
+      } else if (text == "»") {
+          targetPageNum = pageNum + 1;
+      } else {
+          targetPageNum = parseInt(text);
+      }
+      if (targetPageNum < 1 || targetPageNum > pages || targetPageNum == pageNum) {
+          return;
+      }
+      var req = {
+        pageNum: targetPageNum,
+        pageSize: pageSize,
+        params: JSON.stringify(params)
+      };
+      // 请求页面
+      $.get(url, req, function (resp) {
+        if (selector == "html") {
+          document.write(resp);
+          document.close();
+        } else {
+        $(selector).html(resp);
+        }
+      });
+    });
+  </script>
+</nav>

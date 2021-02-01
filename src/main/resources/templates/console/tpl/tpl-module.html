@@ -1,0 +1,56 @@
+<!-- 用户模块：顶部 -->
+<nav th:fragment="user-top(item)" aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li th:if="${#lists.contains(permissionPaths, '/console/user/list.v')}" th:class="'breadcrumb-item' + ${item == 'list' ? ' active' : ''}">
+        <a href="/console/user/list.v">用户列表</a>
+    </li>
+  </ol>
+</nav>
+
+<!-- 产品模块：顶部 -->
+<nav th:fragment="product-top(item)" aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li th:if="${#lists.contains(permissionPaths, '/console/product/list.v')}" th:class="'breadcrumb-item' + ${item == 'list' ? ' active' : ''}">
+        <a href="/console/product/list.v">产品列表</a>
+    </li>
+  </ol>
+</nav>
+
+<!-- 订单模块：顶部 -->
+<nav th:fragment="order-top(item)" aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li th:if="${#lists.contains(permissionPaths, '/console/order/list.v')}" th:class="'breadcrumb-item' + ${item == 'list' ? ' active' : ''}">
+        <a href="/console/order/list.v">订单列表</a>
+    </li>
+  </ol>
+</nav>
+
+<!-- 意见反馈模块：顶部 -->
+<nav th:fragment="feedback-top(item)" aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li th:if="${#lists.contains(permissionPaths, '/console/feedback/list.v')}" th:class="'breadcrumb-item' + ${item == 'list' ? ' active' : ''}">
+        <a href="/console/feedback/list.v">意见反馈列表</a>
+    </li>
+  </ol>
+</nav>
+
+<!-- 管理员模块：顶部 -->
+<nav th:fragment="admin-top(item)" aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li th:if="${#lists.contains(permissionPaths, '/console/admin/list.v')}" th:class="'breadcrumb-item' + ${item == 'list' ? ' active' : ''}">
+        <a href="/console/admin/list.v">管理员列表</a>
+    </li>
+  </ol>
+</nav>
+
+<!-- 系统模块：顶部 -->
+<nav th:fragment="system-top(item)" aria-label="breadcrumb" class="mt-2">
+  <ol class="breadcrumb">
+    <li th:if="${#lists.contains(permissionPaths, '/console/site_config/list.v')}" th:class="'breadcrumb-item' + ${item == 'site-config-list' ? ' active' : ''}">
+        <a href="/console/site_config/list.v">网站配置列表</a>
+    </li>
+    <li th:if="${#lists.contains(permissionPaths, '/console/schedule_job/list.v')}" th:class="'breadcrumb-item' + ${item == 'schedule-job-list' ? ' active' : ''}">
+        <a href="/console/schedule_job/list.v">调度列表</a>
+    </li>
+  </ol>
+</nav>

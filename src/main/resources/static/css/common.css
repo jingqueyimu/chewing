@@ -1,0 +1,24 @@
+.my-bg-err-500 {
+  background: url(/images/mistake.jpg);
+  background-size:100% 100%;
+}
+
+.my-bg-err-404 {
+  background: url(/images/question.jpg);
+  background-size:100% 100%;
+}
+
+.my-err-text {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+/***************** 覆盖bootstrap的样式 *****************/
+
+.custom-file-input:lang(zh) ~ .custom-file-label::after {
+  content: "浏览";
+}
+ 
+.custom-file-label::after {
+  content: "浏览";
+}

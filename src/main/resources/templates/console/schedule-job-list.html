@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('调度列表')"></head>
+  <style>
+    .input-group {
+      height: calc(1.5em + .75rem + 2px);
+    }
+  </style>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('system')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::system-top('schedule-job-list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="jobName_like" th:value="${params?.get('jobName_like')}" placeholder="任务名称">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="status">
+                  <option value th:selected="${params?.get('status')} == ''">--任务状态--</option>
+                  <option th:each="s : ${scheduleJobStatuses}" th:value="${s.code}" th:text="${s.value}" th:selected="${params?.get('status')} == ${s.code}"></option>
+                </select>
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">任务名称</th>
+                  <th scope="col">任务执行类</th>
+                  <th scope="col">任务分组</th>
+                  <th scope="col">调度频率</th>
+                  <th scope="col">状态</th>
+                  <th scope="col">最后执行时间</th>
+                  <th scope="col">最后执行耗时</th>
+                  <th scope="col">开始时间</th>
+                  <th scope="col">执行状态</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="j : ${pageInfo?.list}" th:id="${j.id}">
+                  <th scope="row" th:text="${j.id}"></th>
+                  <td th:text="${j.jobName}"></td>
+                  <td th:text="${j.jobClass}"></td>
+                  <td th:text="${j.jobGroup}"></td>
+                  <td th:text="${j.cron}"></td>
+                  <td th:text="${scheduleJobStatusMap[j.status]}"></td>
+                  <td th:text="${#dates.format(j.lastExecuteTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td>[[${j.lastTakeTime}]]ms</td>
+                  <td th:text="${#dates.format(j.beginTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td th:text="${scheduleJobExecuteStatusMap[j.executeStatus]}"></td>
+                  <td>
+                    <a class="text-primary mr-1" href="#" title="编辑" data-toggle="modal" data-target="#modal-edit-schedule-job" th:data-schedule-job-id="${j.id}">
+                      <i data-feather="edit"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="10">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/schedule_job/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!-- 编辑调度 -->
+    <div class="modal fade" id="modal-edit-schedule-job" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-schedule-job" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-edit-schedule-job">编辑调度</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label for="schedule-job-name" class="col-sm-2 col-form-label">任务名称</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="schedule-job-name" disabled>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="schedule-job-cron" class="col-sm-2 col-form-label">调度频率</label>
+                <div class="input-group col-sm-10">
+                  <input type="text" class="form-control" name="schedule-job-cron" disabled>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="edit-schedule-job-cron">编辑</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="schedule-job-status" class="col-sm-2 col-form-label">状态</label>
+                <div class="input-group col-sm-10">
+                  <select class="custom-select" name="schedule-job-status" disabled>
+                    <option th:each="s : ${scheduleJobStatuses}" th:value="${s.code}" th:text="${s.value}"></option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="edit-schedule-job-status">编辑</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">操作</label>
+                <div class="input-group col-sm-10">
+                  <button type="button" class="btn btn-primary" id="run-schedule-job">执行</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="schedule-job-id">
+    <script th:inline="javascript">
+      feather.replace();
+      
+      var scheduleJobStatusDict;
+      var scheduleJobExecuteStatusDict;
+      $(function(){
+        // 获取字典
+        var dictNames = ["ScheduleJobStatus", "ScheduleJobExecuteStatus"];
+        var dicts = postJsonSync("/common/dicts", {names: dictNames}).data;
+        scheduleJobStatusDict = dicts["ScheduleJobStatus"];
+        scheduleJobExecuteStatusDict = dicts["ScheduleJobExecuteStatus"];
+      });
+
+      // 重置
+      $("#btn-reset").on("click", function() {
+        $("#form-search input").val("");
+        $("#form-search select").val("");
+      });
+
+      // 搜索
+      $("#btn-search").on("click", function() {
+        pageSearch("/console/schedule_job/list.v", [[${pageInfo}]], "#form-search", ["status"], []);
+      });
+
+      // 编辑调度
+      $("#modal-edit-schedule-job").on("show.bs.modal", function (event) {
+        var scheduleJobId = event.relatedTarget.dataset.scheduleJobId;
+        postJson("/console/schedule_job/get", {id: scheduleJobId}, function(resp){
+          if (!isSucc(resp)) {
+            alert(resp.msg);
+            return;
+          }
+          var scheduleJob = resp.data;
+          $("#schedule-job-id").val(scheduleJob.id);
+          $("#modal-edit-schedule-job input[name='schedule-job-name']").val(scheduleJob.jobName);
+          $("#modal-edit-schedule-job input[name='schedule-job-cron']").val(scheduleJob.cron).prop("disabled", true);
+          $("#modal-edit-schedule-job select[name='schedule-job-status']").val(scheduleJob.status).prop("disabled", true);
+          $("#edit-schedule-job-cron").text("编辑");
+          $("#edit-schedule-job-status").text("编辑");
+        });
+      })
+      
+      // 修改调度频率
+      $("#edit-schedule-job-cron").on("click", function(){
+        var that = $(this);
+        var text = that.text();
+        if (text == "编辑") {
+          $("#modal-edit-schedule-job input[name='schedule-job-cron']").prop("disabled", false);
+          $(this).text("保存");
+        } else {
+          var req = {
+            id: $("#schedule-job-id").val(),
+            cron: $("#modal-edit-schedule-job input[name='schedule-job-cron']").val()
+          };
+          if (isEmpty(req.id)){
+            alertFail("任务ID不能为空");
+            return;
+          }
+          if (isEmpty(req.cron)){
+            alertFail("请输入调度频率");
+            return;
+          }
+          postJson("/console/schedule_job/update_cron", req, function(resp) {
+            if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+            }
+            alertSucc("修改调度频率成功");
+            // 更新列表数据
+            var job = resp.data;
+            fillData(job);
+            $("#modal-edit-schedule-job input[name='schedule-job-cron']").prop("disabled", true);
+            that.text("编辑");
+          });
+        }
+      });
+      
+      // 修改任务状态
+      $("#edit-schedule-job-status").on("click", function(){
+        var that = $(this);
+        var text = that.text();
+        if (text == "编辑") {
+          $("#modal-edit-schedule-job select[name='schedule-job-status']").prop("disabled", false);
+          $(this).text("保存");
+        } else {
+          var req = {
+            id: $("#schedule-job-id").val(),
+            status: $("#modal-edit-schedule-job select[name='schedule-job-status']").val()
+          };
+          if (isEmpty(req.id)){
+            alertFail("任务ID不能为空");
+            return;
+          }
+          if (isEmpty(req.status)){
+            alertFail("请选择任务状态");
+            return;
+          }
+          postJson("/console/schedule_job/update_status", req, function(resp) {
+            if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+            }
+            alertSucc("修改任务状态成功");
+            // 更新列表数据
+            var job = resp.data;
+            fillData(job);
+            $("#modal-edit-schedule-job select[name='schedule-job-status']").prop("disabled", true);
+            that.text("编辑");
+          });
+        }
+      });
+      
+      // 执行任务
+      var running = false;
+      $("#run-schedule-job").on("click", function(){
+        if (running) {
+          return;
+        }
+        running = true;
+        addLoading($(this));
+        window.setTimeout(function(){
+          var jobId = $("#schedule-job-id").val();
+          postJson("/console/schedule_job/run", {id: jobId}, function(resp) {
+            running = false;
+            $("#run-schedule-job").text("执行");
+            if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+            }
+            refreshData(jobId);
+            alertSucc("执行成功");
+          });
+        }, 200);
+      });
+      
+      // 刷新数据
+      function refreshData(scheduleJobId) {
+        postJson("/console/schedule_job/get", {id: scheduleJobId}, function(resp){
+          if (!isSucc(resp)) {
+            return;
+          }
+          fillData(resp.data);
+        });
+      }
+      
+      // 填充数据
+      function fillData(job) {
+        var jobCols = $("#" + job.id).children();
+        jobCols.eq(0).text(job.id);
+        jobCols.eq(1).text(job.jobName);
+        jobCols.eq(2).text(job.jobClass);
+        jobCols.eq(3).text(job.jobGroup);
+        jobCols.eq(4).text(job.cron);
+        jobCols.eq(5).text(scheduleJobStatusDict[job.status]);
+        jobCols.eq(6).text(job.lastExecuteTime);
+        jobCols.eq(7).text(job.lastTakeTime + "ms");
+        jobCols.eq(8).text(job.beginTime);
+        jobCols.eq(9).text(scheduleJobExecuteStatusDict[job.executeStatus]);
+      }
+    </script>
+  </body>
+</html>

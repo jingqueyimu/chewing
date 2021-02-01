@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('用户列表')"></head>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('user')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::user-top('list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="username_like" th:value="${params?.get('username_like')}" placeholder="用户名">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="mobile_like" th:value="${params?.get('mobile_like')}" placeholder="手机号">
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <select class="form-control form-control-sm" name="registerType">
+                  <option value th:selected="${params?.get('registerType')} == ''">--注册方式--</option>
+                  <option th:each="t : ${registerTypes}" th:value="${t.code}" th:text="${t.value}" th:selected="${params?.get('registerType')} == ${t.code}"></option>
+                </select>
+              </div>
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="registerTime_begin" th:value="${params?.get('registerTime_begin')}" placeholder="起始注册时间" id="register-time-begin">
+              </div>
+              ~
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="registerTime_end" th:value="${params?.get('registerTime_end')}" placeholder="截止注册时间" id="register-time-end">
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-export">导出</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">用户名</th>
+                  <th scope="col">姓名</th>
+                  <th scope="col">手机号</th>
+                  <th scope="col">邮箱</th>
+                  <th scope="col">注册方式</th>
+                  <th scope="col">注册时间</th>
+                  <th scope="col">上次登录时间</th>
+                  <th scope="col">是否VIP</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="u : ${pageInfo?.list}">
+                  <th scope="row" th:text="${u.id}"></th>
+                  <td th:text="${u.username}"></td>
+                  <td th:text="${u.realName}"></td>
+                  <td th:text="${u.mobile}"></td>
+                  <td th:text="${u.email}"></td>
+                  <td th:text="${registerTypeMap[u.registerType]}"></td>
+                  <td th:text="${#dates.format(u.registerTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td th:text="${#dates.format(u.lastLoginTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td th:text="${u.vipFlag == true ? '是' : '否'}"></td>
+                  <td>
+                    <a class="text-primary" href="#" title="详情" data-toggle="modal" data-target="#modal-user-detail" th:data-user-id="${u.id}">
+                      <i data-feather="info"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="10">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/user/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <!-- 用户详情 -->
+    <div class="modal fade" id="modal-user-detail" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-user-detail" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-user-detail">用户详情</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-md-6">用户编号：<span id="detail-id"></span></div>
+                <div class="col-md-6">用户名：<span id="detail-username"></span></div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6">姓名：<span id="detail-real-name"></span></div>
+                <div class="col-md-6">手机号：<span id="detail-mobile"></span></div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6">邮箱：<span id="detail-email"></span></div>
+                <div class="col-md-6">生日：<span id="detail-birthday"></span></div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6"> 注册方式：<span id="detail-register-type"></span></div>
+                <div class="col-md-6">注册时间：<span id="detail-register-time"></span></div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6">上次登录时间：<span id="detail-last-login-time"></span></div>
+                <div class="col-md-6">是否VIP：<span id="detail-vip-flag"></span></div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-md-6">VIP到期时间：<span id="detail-vip-expire-time"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      feather.replace();
+      
+      var registerTypeDict;
+      $(function(){
+        // 获取字典
+        var dictNames = ["RegisterType"];
+        var dicts = postJsonSync("/common/dicts", {names: dictNames}).data;
+        registerTypeDict = dicts["RegisterType"];
+      });
+
+      // 起始注册时间
+      laydate.render({
+        elem: "#register-time-begin",
+        type: "datetime",
+        theme: "#007bff"
+      });
+
+      // 截止注册时间
+      laydate.render({
+        elem: "#register-time-end",
+        type: "datetime",
+        theme: "#007bff"
+      });
+
+      // 重置
+      $("#btn-reset").on("click", function() {
+        $("#form-search input").val("");
+        $("#form-search select").val("");
+      });
+
+      // 搜索
+      $("#btn-search").on("click", function() {
+        pageSearch("/console/user/list.v", [[${pageInfo}]], "#form-search", ["registerType"], []);
+      });
+      
+      // 导出
+      $("#btn-export").on("click", function() {
+        var req = [[${params}]];
+        downloadFile("/console/user/exportExcel", req);
+      });
+
+      $("#modal-user-detail").on("show.bs.modal", function (event) {
+        var req = {
+          userId: event.relatedTarget.dataset.userId
+        };
+        // 查询用户信息
+        postJson("/console/user/get", req, function(resp) {
+          if (!isSucc(resp)) {
+              return;
+          }
+          var data = resp.data;
+          if (data == null) {
+              return;
+          }
+          $("#detail-id").text(data.id);
+          $("#detail-username").text(data.username);
+          $("#detail-real-name").text(data.realName);
+          $("#detail-mobile").text(data.mobile);
+          $("#detail-email").text(data.email);
+          $("#detail-birthday").text(data.birthday);
+          $("#detail-register-type").text(registerTypeDict[data.registerType]);
+          $("#detail-register-time").text(data.registerTime);
+          $("#detail-last-login-time").text(data.lastLoginTime);
+          $("#detail-vip-flag").text(data.vipFlag ? "是" : "否");
+          $("#detail-vip-expire-time").text(data.vipExpireTime);
+        });
+      })
+    </script>
+  </body>
+</html>

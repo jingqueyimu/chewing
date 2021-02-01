@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('提示信息')"></head>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/console/tpl/tpl-common::top"></header>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <p class="text-center text-warning my-err-text my-bg-err-500" style="height: 40rem; padding-top: 13rem">
+            [[${msg}]]<br>
+            <a href="#" onclick="history.go(-1)" class="btn btn-warning text-white">返回上一页</a>
+          </p>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('500 Internal Server Error')"></head>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+
+    <p th:if="${msg == null}" class="text-center text-warning my-err-text my-bg-err-500" style="height: 40rem; padding-top: 9rem">
+      emmm~~~<br/>
+      好像发生了什么错误？！<br/>
+      容我给开发提个Bug~<br/>
+      <a href="#" onclick="history.go(-1)" class="btn btn-warning text-white">返回上一页</a>
+      <a href="/" class="btn btn-warning text-white">返回首页</a>
+    </p>
+    <p th:if="${msg != null}" class="text-center text-warning my-err-text my-bg-err-500" style="height: 40rem; padding-top: 13rem">
+      [[${msg}]]<br/>
+      <a href="#" onclick="history.go(-1)" class="btn btn-warning text-white">返回上一页</a>
+      <a href="/" class="btn btn-warning text-white">返回首页</a>
+    </p>
+
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+  </body>
+</html>

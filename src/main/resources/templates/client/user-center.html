@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('个人中心')"></head>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <div class="text-center container my-main-top">
+      <div class="row">
+        <div class="col-md-2 mt-5">
+          <div class="nav flex-column nav-pills bg-secondary rounded" id="v-pills-tab-uc" role="tablist" aria-orientation="vertical">
+            <div class="nav-link shadow-sm text-white" style="height: 12rem">
+              <img th:src="${serverUrl + currUser?.avatar}" class="img-fluid rounded-circle my-user-portrait mb-3" id="uc-avatar" alt="头像"><br/>
+              <span th:text="${currUser?.username}" class="mt-5" id="uc-username"></span>
+            </div>
+            <a class="nav-link shadow-sm text-white active" id="v-pills-setting-tab" data-toggle="pill" href="#v-pills-setting" role="tab" aria-controls="v-pills-setting" aria-selected="true">账号设置</a>
+            <a class="nav-link shadow-sm text-white" id="v-pills-feedback-tab" data-toggle="pill" href="#v-pills-feedback" role="tab" aria-controls="v-pills-feedback" aria-selected="false">我的反馈</a>
+          </div>
+        </div>
+        <div class="col-md-10 mt-5">
+          <div class="tab-content">
+            <!-- 账号设置-->
+            <div class="tab-pane fade show active" id="v-pills-setting" role="tabpanel" aria-labelledby="v-pills-setting-tab"></div>
+            <!-- 我的反馈-->
+            <div class="tab-pane fade rounded" id="v-pills-feedback" role="tabpanel" aria-labelledby="v-pills-feedback-tab"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <script type="text/javascript">
+      // 初始化
+      $(function () {
+        userSettings();
+      });
+
+      // 点击账号设置
+      $("#v-pills-setting-tab").on("click", function () {
+        userSettings();
+      });
+
+      // 点击我的反馈
+      $("#v-pills-feedback-tab").on("click", function () {
+        loadFeedbacks(1, 5);
+      });
+
+      // 账号设置
+      function userSettings() {
+        $.get("/api/user/setting.v", {}, function (resp) {
+          $("#v-pills-setting").html(resp);
+        });
+      }
+      
+      // 我的反馈
+      function loadFeedbacks(pageNum, pageSize) {
+        var req = {
+          pageNum: pageNum,
+          pageSize: pageSize,
+        };
+        $.get("/api/feedback/feedback_list.v", req, function (resp) {
+          $("#v-pills-feedback").html(resp);
+        });
+      }
+    </script>
+  </body>
+</html>

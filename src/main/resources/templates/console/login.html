@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="console/tpl/tpl-common::head('登录')"></head>
+  <body style="height: 100%">
+    <header class="fixed-top">
+      <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <img src="/images/logo.jpg" class="my-navbar-logo">
+            <strong>Chewing ● 管理控制台</strong>
+          </a>
+        </div>
+      </div>
+      <!-- 提示窗 -->
+      <div class="alert alert-secondary text-center" role="alert" style="display: none" id="alertTips">
+        <input type="hidden">
+        <strong></strong>
+        <button type="button" class="close" onclick="$('#alertTips').fadeOut();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="text-center my-main-top">
+      <img class="my-login-logo mt-5" src="/images/logo.jpg" alt="Chewing" width="72" height="72">
+      <form class="my-form-signin" id="login">
+        <input type="text" name="name" id="name" class="form-control" placeholder="用户名" maxlength="32" required autofocus>
+        <input type="password" name="password" id="password" class="form-control" placeholder="密码" maxlength="16" required>
+        <div class="input-group mb-3">
+          <input type="text" name="captcha" id="captcha" class="form-control" placeholder="图形验证码" maxlength="6" required>
+          <div class="input-group-append">
+            <input type="hidden" id="captcha-token" />
+            <img src="/common/captcha?token=123" class="my-img-captcha" id="img-captcha" onclick="refreshCaptcha()"/>
+          </div>
+        </div>
+        <div class="checkbox mb-3">
+          <label> <input type="checkbox" id="remember-me" checked> 记住我 </label>
+        </div>
+        <button class="btn btn-lg btn-dark btn-block" type="button" onclick="login()">
+          登录
+        </button>
+      </form>
+    </div>
+    <p class="text-center mt-5">&copy; 2020</p>
+    <script type="text/javascript">
+      // 初始化
+      $(function () {
+        refreshCaptcha();
+      });
+      
+      // 按下enter键
+      document.onkeydown = function(e) {
+        if (e.keyCode == 13) {
+          login();
+        }
+      }
+      
+      // 刷新图形验证码
+      function refreshCaptcha() {
+        var captchaToken = randomString(16);
+        $("#captcha-token").val(captchaToken);
+        $("#img-captcha").attr("src", "/common/captcha?token=" + captchaToken);
+      }
+      
+      // 登录
+      function login() {
+        // 请求参数
+        var req = {
+          name: $("#name").val(),
+          password: $("#password").val(),
+          captchaToken: $("#captcha-token").val(),
+          captchaCode: $("#captcha").val(),
+          rememberMe: $("#remember-me").prop("checked"),
+        };
+        // 参数校验
+        if (isEmpty(req.name)) {
+          alertFail("请输入用户名");
+          return;
+        }
+        if (isEmpty(req.password)) {
+          alertFail("请输入密码");
+          return;
+        }
+        if (isEmpty(req.captchaToken)) {
+          alertFail("图形验证码Token不能为空");
+          return;
+        }
+        if (isEmpty(req.captchaCode)) {
+          alertFail("请输入图形验证码");
+          return;
+        }
+        // 发起请求
+        postJson("/console/admin/login", req, function (resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            refreshCaptcha();
+            return;
+          }
+          location.href = "/console/index.v";
+        });
+      }
+    </script>
+  </body>
+</html>
