@@ -95,6 +95,7 @@ src/main/resources
 * 配置初始化标识及 SQL 语句。
 
 初始化示例：
+
 ```
 [
     {
@@ -118,6 +119,7 @@ src/main/resources
 * Excel 导入导出处理器接口：IExcelImportHandler、IExcelExportHandler。
 
 导入示例：
+
 ```
 String msg = null;
 try {
@@ -142,6 +144,7 @@ try {
 ```
 
 导出示例：
+
 ```
 ServletOutputStream os = null;
 try {
@@ -203,14 +206,14 @@ try {
 #### （10）配置文件
 
 * 由于个人习惯，项目中使用的是 properties 配置文件，对于习惯使用 yml 配置文件的，请手动修改。
-* 如果要加载自定义的 yml 配置文件，可以使用项目中提供的 YAML 属性源工厂类：YamlPropertyResourceFactory。
+* 如果要加载自定义的 yml 配置文件，可以使用项目中提供的 YAML 属性源工厂类：YamlPropertySourceFactory。
 
 代码示例：
 
 ```
 @Component
 @ConfigurationProperties(prefix="test")
-@PropertySource(value="classpath:config/test.yml", encoding="UTF-8", factory=YamlPropertyResourceFactory.class)
+@PropertySource(value="classpath:config/test.yml", encoding="UTF-8", factory=YamlPropertySourceFactory.class)
 public class TestYmlConfig {
     ...
 }
@@ -281,3 +284,12 @@ public void test2() {
 目前，Chewing 还只是提供了一些较为常用的功能（实在是肝不动了）。但是，后续会不断完善、新增功能。有时间的话，也会整一个微服务版的。
 
 敬请期待~
+
+# 交流区
+
+<p align="center">
+    <img src="https://www.jingqueyimu.com/images/qrcode.jpg" height="250px" width="250px"><br/>
+    微信公众号：惊却一目<br/>
+    个人博客：<a href="https://www.jingqueyimu.com">惊却一目</a>
+</p>
+
