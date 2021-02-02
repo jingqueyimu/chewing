@@ -17,14 +17,14 @@ Chewing 是一个简单的 Java 项目快速开发脚手架。既适合需要开
 ### 1、后端
 
 * SpringBoot：Web 应用框架。
-* Mybatis：持久层框架。
+* MyBatis：持久层框架。
 * MySQL：关系型数据库。
 * Redis：缓存数据库。
 * RabbitMQ：消息队列中间件。
 
 ### 2、前端
 
-* Themeleaf：模板引擎。
+* Thymeleaf：模板引擎。
 * Bootstrap：UI 框架。
 
 ## 四、环境部署
