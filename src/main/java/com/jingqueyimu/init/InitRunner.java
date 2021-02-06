@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jingqueyimu.annotation.Perm;
+import com.jingqueyimu.config.MyConfig;
 import com.jingqueyimu.constant.BizConstant;
 import com.jingqueyimu.constant.CacheConstant;
 import com.jingqueyimu.model.Admin;
@@ -40,6 +41,8 @@ public class InitRunner implements CommandLineRunner {
     
     public final Logger log = LoggerFactory.getLogger(this.getClass());
     
+    @Autowired
+    private MyConfig config;
     @Autowired
     private AdminService adminService;
     @Autowired
@@ -92,8 +95,8 @@ public class InitRunner implements CommandLineRunner {
         }
         superAdmin = new Admin();
         superAdmin.setId(BizConstant.SUPER_ADMIN_ID);
-        superAdmin.setName("admin");
-        superAdmin.setPassword(SysUtil.md5Crypt("123456"));
+        superAdmin.setName(config.getSuperAdminName());
+        superAdmin.setPassword(SysUtil.md5Crypt(config.getSuperAdminPwd()));
         superAdmin.setAvatar(BizConstant.DEFAULT_AVATAR);
         superAdmin.setRealName("超级管理员");
         superAdmin.setLockFlag(false);

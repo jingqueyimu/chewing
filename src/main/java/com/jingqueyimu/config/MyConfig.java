@@ -33,6 +33,16 @@ public class MyConfig {
      * 文件存放路径
      */
     private String fileStoragePath;
+    
+    /**
+     * 超级管理员账户名
+     */
+    private String superAdminName;
+    
+    /**
+     * 超级管理员密码
+     */
+    private String superAdminPwd;
 
     public String getRunEnv() {
         return runEnv;
@@ -65,4 +75,20 @@ public class MyConfig {
     public void setFileStoragePath(String fileStoragePath) {
         this.fileStoragePath = fileStoragePath;
     }
+
+	public String getSuperAdminName() {
+		return superAdminName;
+	}
+
+	public void setSuperAdminName(String superAdminName) {
+		this.superAdminName = superAdminName;
+	}
+
+	public String getSuperAdminPwd() {
+		return superAdminPwd;
+	}
+
+	public void setSuperAdminPwd(String superAdminPwd) {
+		this.superAdminPwd = superAdminPwd;
+	}
 }
