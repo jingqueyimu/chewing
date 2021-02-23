@@ -1,0 +1,25 @@
+<div th:fragment="notice-list" >
+  <div th:each="item : ${pageInfo?.list}">
+    <div class="row py-3">
+      <div th:unless="${#strings.isEmpty(item.image)}" class="col-md-3 order-md-1" style="width: 250px; max-height: 500px;">
+        <img th:src="${item.image}" style="width: 100%; height: 100%;">
+      </div>
+      <div class="col-md order-md-2">
+        <h5><a class="text-dark" th:href="'/notice/detail.v?id=' + ${item.id}" th:text="${item.title}"></a></h5>
+        <p class="text-secondary" th:text="${item.summary}" style="font-size: 0.9rem;"></p>
+        <div class="d-flex justify-content-end">
+          <small class="text-muted mr-3" th:text="${#dates.format(item.gmtCreate,'yyyy-MM-dd')}"></small>
+          <small class="text-muted">
+            <i class="bi bi-eye-fill mr-2"></i>阅读([[${item.readCount}]])
+          </small>
+        </div>
+      </div>
+    </div>
+    <hr>
+  </div>
+  <!-- 分页组件 -->
+  <nav th:replace="tpl-component::page(${pageInfo}, '/notice/list.v', ${params}, '#notice-list')"></nav>
+  <div th:if="${#lists.isEmpty(pageInfo?.list)}" class="text-center text-secondary pb-2">
+    暂无动态
+  </div>
+</div>

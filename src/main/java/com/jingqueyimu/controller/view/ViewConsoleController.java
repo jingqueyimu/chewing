@@ -26,6 +26,7 @@ import com.jingqueyimu.model.dict.ScheduleJobStatus;
 import com.jingqueyimu.model.vo.PermissionWithAccessVO;
 import com.jingqueyimu.service.AdminService;
 import com.jingqueyimu.service.FeedbackService;
+import com.jingqueyimu.service.NoticeService;
 import com.jingqueyimu.service.PermissionService;
 import com.jingqueyimu.service.ScheduleJobService;
 import com.jingqueyimu.service.SiteConfigService;
@@ -52,6 +53,8 @@ public class ViewConsoleController extends BaseController {
     private SiteConfigService siteConfigService;
     @Autowired
     private ScheduleJobService scheduleJobService;
+    @Autowired
+    private NoticeService noticeService;
     
     /**
      * 提示页面
@@ -299,6 +302,26 @@ public class ViewConsoleController extends BaseController {
         mv.addObject("scheduleJobStatuses", ScheduleJobStatus.values());
         mv.addObject("scheduleJobStatusMap", ScheduleJobStatus.getEnumInfo());
         mv.addObject("scheduleJobExecuteStatusMap", ScheduleJobExecuteStatus.getEnumInfo());
+        return mv;
+    }
+    
+    /**
+     * 公告列表
+     *
+     * @param request
+     * @return
+     */
+    @Perm(group="system", name="公告列表", description="系统管理-公告列表")
+    @GetMapping("/notice/list.v")
+    public ModelAndView noticeList(HttpServletRequest request) {
+        int pageNum = NumberUtils.toInt(request.getParameter("pageNum"), 1);
+        int pageSize = NumberUtils.toInt(request.getParameter("pageSize"), 10);
+        JSONObject params = JSONObject.parseObject(request.getParameter("params"));
+        
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/console/notice-list");
+        mv.addObject("params", params);
+        mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params));
         return mv;
     }
 }

@@ -15,6 +15,7 @@ import com.jingqueyimu.controller.BaseController;
 import com.jingqueyimu.model.Feedback;
 import com.jingqueyimu.model.dict.FeedbackType;
 import com.jingqueyimu.service.FeedbackService;
+import com.jingqueyimu.service.NoticeService;
 
 /**
  * 页面控制器
@@ -27,6 +28,8 @@ public class ViewController extends BaseController {
     
     @Autowired
     private FeedbackService feedbackService;
+    @Autowired
+    private NoticeService noticeService;
     
     /**
      * 首页
@@ -73,6 +76,60 @@ public class ViewController extends BaseController {
     }
     
     /**
+     * 公告
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/notice/index.v")
+    public ModelAndView notice(HttpServletRequest request) {
+        int pageNum = NumberUtils.toInt(request.getParameter("pageNum"), 1);
+        int pageSize = NumberUtils.toInt(request.getParameter("pageSize"), 10);
+        JSONObject params = new JSONObject();
+        
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/client/notice-index");
+        mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params));
+        return mv;
+    }
+    
+    /**
+     * 公告列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/notice/list.v")
+    public ModelAndView noticeList(HttpServletRequest request) {
+        int pageNum = NumberUtils.toInt(request.getParameter("pageNum"), 1);
+        int pageSize = NumberUtils.toInt(request.getParameter("pageSize"), 10);
+        JSONObject params = new JSONObject();
+        
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/client/notice-list");
+        mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params));
+        return mv;
+    }
+    
+    /**
+     * 公告详情
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/notice/detail.v")
+    public ModelAndView noticeDetail(HttpServletRequest request) {
+        long noticeId = NumberUtils.toLong(request.getParameter("id"), 0L);
+        
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("/client/notice-detail");
+        mv.addObject("detail", noticeService.viewDetail(noticeId));
+        mv.addObject("prev", noticeService.prevNotice(noticeId));
+        mv.addObject("next", noticeService.nextNotice(noticeId));
+        return mv;
+    }
+    
+    /**
      * 个人中心
      *
      * @return
@@ -87,6 +144,7 @@ public class ViewController extends BaseController {
     /**
      * 账号设置
      *
+     * @param request
      * @return
      */
     @GetMapping("/api/user/setting.v")
@@ -99,6 +157,7 @@ public class ViewController extends BaseController {
     /**
      * 意见反馈
      *
+     * @param request
      * @return
      */
     @GetMapping("/api/feedback/index.v")
@@ -112,9 +171,10 @@ public class ViewController extends BaseController {
     /**
      * 我的反馈列表
      *
+     * @param request
      * @return
      */
-    @GetMapping("/api/feedback/feedback_list.v")
+    @GetMapping("/api/feedback/list.v")
     public ModelAndView feedbackList(HttpServletRequest request) {
         int pageNum = NumberUtils.toInt(request.getParameter("pageNum"), 1);
         int pageSize = NumberUtils.toInt(request.getParameter("pageSize"), 10);

@@ -57,7 +57,7 @@
           pageNum: pageNum,
           pageSize: pageSize,
         };
-        $.get("/api/feedback/feedback_list.v", req, function (resp) {
+        $.get("/api/feedback/list.v", req, function (resp) {
           $("#v-pills-feedback").html(resp);
         });
       }

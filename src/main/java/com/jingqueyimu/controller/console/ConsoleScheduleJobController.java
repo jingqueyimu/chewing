@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.jingqueyimu.annotation.Perm;
+import com.jingqueyimu.constant.StatusCode;
 import com.jingqueyimu.controller.BaseController;
+import com.jingqueyimu.exception.AppException;
 import com.jingqueyimu.model.ScheduleJob;
 import com.jingqueyimu.model.bean.ResultData;
 import com.jingqueyimu.service.ScheduleJobService;
@@ -52,7 +54,7 @@ public class ConsoleScheduleJobController extends BaseController {
     @RequestMapping("/get")
     public ResultData get(@RequestBody JSONObject params) {
         if (params.isEmpty()) {
-            throw new RuntimeException("查询参数不能为空");
+            throw new AppException(StatusCode.ERR_PARAM, "查询参数不能为空");
         }
         ScheduleJob job = scheduleJobService.get(params);
         return ResultData.succ(job);

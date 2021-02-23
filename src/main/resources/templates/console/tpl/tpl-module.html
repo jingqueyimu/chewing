@@ -52,5 +52,8 @@
     <li th:if="${#lists.contains(permissionPaths, '/console/schedule_job/list.v')}" th:class="'breadcrumb-item' + ${item == 'schedule-job-list' ? ' active' : ''}">
         <a href="/console/schedule_job/list.v">调度列表</a>
     </li>
+    <li th:if="${#lists.contains(permissionPaths, '/console/notice/list.v')}" th:class="'breadcrumb-item' + ${item == 'notice-list' ? ' active' : ''}">
+        <a href="/console/notice/list.v">公告列表</a>
+    </li>
   </ol>
 </nav>

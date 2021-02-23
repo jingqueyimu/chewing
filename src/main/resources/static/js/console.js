@@ -8,10 +8,10 @@
  * @param boolKeys value为布尔类型的key
  */
 function pageSearch(url, pageInfo, formSelector, numKeys, boolKeys) {
-	if (pageInfo == undefined) {
-		return;
-	}
-	var pageNum = pageInfo.pageNum;
+    if (pageInfo == undefined) {
+        return;
+    }
+    var pageNum = pageInfo.pageNum;
     var pageSize = pageInfo.pageSize;
     var pages = pageInfo.pages;
     pageNum = pageNum < 1 ? 1 : pageNum;

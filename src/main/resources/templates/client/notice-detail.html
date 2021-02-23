@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/client/tpl/tpl-common::head('公告详情')"></head>
+  <style>
+    .jumbotron {
+      padding-left: 1rem;
+    }
+    @media (max-width: 768px) {
+      #notice-container {
+        padding-top: 6rem !important;
+      }
+      #notice-content img {
+        width: 100% !important;
+      }
+    }
+  </style>
+  <body>
+    <!-- 顶部 -->
+    <header th:replace="/client/tpl/tpl-common::top"></header>
+    
+    <div class="px-4 pb-2 pt-5 bg-white container" id="notice-container">
+      <h5 class="pt-3 pb-3 mt-4 mb-3 jumbotron text-left">
+        <a class="text-secondary" href="/notice/index.v">返回网站动态</a>
+      </h5>
+      <h3 class="pb-2 mt-4 mb-3 text-center" th:text="${detail?.title}"></h3>
+      <p class="text-center">
+        <small class="text-muted mr-3" th:text="${#dates.format(detail?.gmtCreate,'yyyy-MM-dd')}"></small>
+        <small class="text-muted">
+          <i class="bi bi-eye-fill mr-2"></i>阅读([[${detail?.readCount}]])
+        </small>
+      </p>
+      <hr>
+      <div th:utext="${detail?.content}" id="notice-content"></div>
+      <hr>
+      <div class="container">
+        <div class="row">
+        <div class="col-md-6 text-left">
+          <span th:if="${prev != null}" >上一篇：<a class="" th:href="'/notice/detail.v?id=' + ${prev.id}" th:text="${prev.title}"></a></span>
+        </div>
+        <div class="col-md-6 text-right">
+          <span th:if="${next != null}" >下一篇：<a class="" th:href="'/notice/detail.v?id=' + ${next.id}" th:text="${next.title}"></a></span>
+        </div>
+        </div>
+      </div>
+    </div>
+    <!-- 底部 -->
+    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+  </body>
+</html>

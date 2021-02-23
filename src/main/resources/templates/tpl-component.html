@@ -93,7 +93,7 @@
   <input type="hidden" th:value="${pageInfo.pageSize}" id="pageSize">
   <input type="hidden" th:value="${pageInfo.pages}" id="pages">
   <div class="row d-flex justify-content-between">
-      <span class="text-secondary">共 [[${pageInfo?.pages}]] 条记录</span>
+      <span class="text-secondary">共 [[${pageInfo?.total}]] 条记录</span>
       <ul class="pagination">
         <li class="page-item">
           <a class="page-link" href="#" aria-label="上一页">

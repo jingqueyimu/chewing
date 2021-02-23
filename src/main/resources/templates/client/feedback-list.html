@@ -23,7 +23,7 @@
   </div>
 </div>
 <!-- 分页组件 -->
-<nav th:replace="tpl-component::page(${pageInfo}, '/api/feedback/feedback_list.v', ${params}, '#v-pills-feedback')"></nav>
+<nav th:replace="tpl-component::page(${pageInfo}, '/api/feedback/list.v', ${params}, '#v-pills-feedback')"></nav>
 <ul th:if="${#lists.isEmpty(pageInfo?.list)}" class="list-group">
   <li class="list-group-item list-group-item-light text-center">
     您还没有反馈过哟！

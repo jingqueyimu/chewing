@@ -54,7 +54,7 @@ public class ConsoleSiteConfigController extends BaseController {
     @RequestMapping("/get")
     public ResultData get(@RequestBody JSONObject params) {
         if (params.isEmpty()) {
-            throw new RuntimeException("查询参数不能为空");
+            throw new AppException(StatusCode.ERR_PARAM, "查询参数不能为空");
         }
         SiteConfig siteConfig = siteConfigService.get(params);
         return ResultData.succ(siteConfig);

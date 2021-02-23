@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="/console/tpl/tpl-common::head('公告列表')"></head>
+  <body>
+    <!-- 顶部 -->
+    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 左侧导航 -->
+        <nav th:replace="/console/tpl/tpl-common::left('system')"></nav>
+
+        <!-- 数据区 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
+          <!-- 面包屑导航 -->
+          <nav th:replace="/console/tpl/tpl-module::system-top('notice-list')"></nav>
+          <!-- 搜索区 -->
+          <form id="form-search">
+            <div class="form-row mb-2">
+              <div class="col-md-2 col-sm-4 mb-1">
+                <input type="text" class="form-control form-control-sm" name="title_like" th:value="${params?.get('title_like')}" placeholder="标题">
+              </div>
+              <div class="col-auto mb-1">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-reset">重置</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-search">搜索</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-notice">添加公告</button>
+              </div>
+            </div>
+          </form>
+          <!-- 表格数据 -->
+          <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y: auto">
+              <thead>
+                <tr>
+                  <th scope="col">编号</th>
+                  <th scope="col">标题</th>
+                  <th scope="col">阅读数</th>
+                  <th scope="col">发布时间</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:if="${not #lists.isEmpty(pageInfo?.list)}" th:each="item : ${pageInfo?.list}" th:id=${item.id}>
+                  <th scope="row" th:text="${item.id}"></th>
+                  <td th:text="${item.title}"></td>
+                  <td th:text="${item.readCount}"></td>
+                  <td th:text="${#dates.format(item.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                  <td>
+                    <a class="text-primary" href="#" title="编辑" data-toggle="modal" data-target="#modal-edit-notice" th:data-notice-id="${item.id}">
+                      <i data-feather="edit"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
+                  <td class="text-center" colspan="5">暂无数据</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- 分页 -->
+            <nav th:replace="tpl-component::dspage(${pageInfo}, '/console/notice/list.v', ${params}, 'html')"></nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <!-- 添加公告 -->
+    <div class="modal fade" id="modal-add-notice" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-add-notice" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-add-notice">添加公告</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label class="col-sm-1 col-form-label">标题</label>
+                <div class="col-sm-11">
+                  <input type="text" class="form-control" id="add-notice-title">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-1 col-form-label">内容</label>
+                <div class="col-sm-11">
+                  <div class="form-control" id="add-notice-content" style="height: 300px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-add-notice-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 编辑公告 -->
+    <div class="modal fade" id="modal-edit-notice" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-notice" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-title-edit-notice">编辑公告</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="form-group row">
+                <label class="col-sm-1 col-form-label">标题</label>
+                <div class="col-sm-11">
+                  <input type="text" class="form-control" id="edit-notice-title">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-1 col-form-label">内容</label>
+                <div class="col-sm-11">
+                  <div class="form-control" id="edit-notice-content" style="height: 300px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btn-edit-notice-save">确定</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="notice-id">
+
+    <script th:inline="javascript">
+      feather.replace();
+      
+      var addEditor;
+      var editEditor;
+      $(function(){
+        addEditor = richEditor("#add-notice-content");
+        editEditor = richEditor("#edit-notice-content");
+      });
+
+      // 重置
+      $("#btn-reset").on("click", function() {
+        $("#form-search input").val("");
+        $("#form-search select").val("");
+      });
+
+      // 搜索
+      $("#btn-search").on("click", function() {
+        pageSearch("/console/notice/list.v", [[${pageInfo}]], "#form-search", [], []);
+      });
+      
+      // 添加公告
+      $("#btn-add-notice-save").on("click", function(event) {
+        var imgs = $("#add-notice-content").children().eq(0).find("img");
+        var content = $("#add-notice-content").children().eq(0).html();
+        var req = {
+          title: $("#add-notice-title").val(),
+          content: content,
+          summary: getSummary(content),
+          image: imgs.length == 0 ? null : imgs.eq(0).attr("src")
+        };
+        if (isEmpty(req.title)) {
+          alertFail("请输入标题");
+          return;
+        }
+        if (isEmpty(req.content)) {
+          alertFail("请输入内容");
+          return;
+        }
+        postJson("/console/notice/save", req, function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          $("#modal-add-notice").modal("hide");
+          alertSucc("添加成功", function() {
+            location.reload();
+          });
+        });
+      });
+      
+      // 编辑公告
+      $("#modal-edit-notice").on("show.bs.modal", function (event) {
+        var noticeId = event.relatedTarget.dataset.noticeId;
+        postJson("/console/notice/get", {id: noticeId}, function(resp){
+          if (!isSucc(resp)) {
+            alert(resp.msg);
+            return;
+          }
+          var notice = resp.data;
+          $("#notice-id").val(notice.id);
+          $("#edit-notice-title").val(notice.title);
+          $("#edit-notice-content").children().eq(0).html(notice.content)
+        });
+      });
+      
+      // 更新公告
+      $("#btn-edit-notice-save").on("click", function(event) {
+          var imgs = $("#edit-notice-content").children().eq(0).find("img");
+          var content = $("#edit-notice-content").children().eq(0).html();
+        var req = {
+          id: $("#notice-id").val(),
+          title: $("#edit-notice-title").val(),
+          content: content,
+          summary: getSummary(content),
+          image: imgs.length == 0 ? null : imgs.eq(0).attr("src")
+        };
+        if (isEmpty(req.id)) {
+          alertFail("请选择公告");
+          return;
+        }
+        if (isEmpty(req.title)) {
+          alertFail("请输入标题");
+          return;
+        }
+        if (isEmpty(req.content)) {
+          alertFail("请输入内容");
+          return;
+        }
+        postJson("/console/notice/update", req, function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          alertSucc("更新成功");
+          $("#modal-edit-notice").modal("hide");
+          // 更新列表数据
+          var data = resp.data;
+          var cols = $("#" + data.id).children();
+          cols.eq(1).text(data.title);
+        });
+      });
+      
+      /**
+       * 获取摘要
+       * 
+       * @param content
+       * @returns
+       */
+      function getSummary(content) {
+        var text = removeTag(content);
+        if (text.length > 200) {
+          return text.substring(0, 200) + "...";
+        } else {
+          return text;
+        }
+      }
+    </script>
+  </body>
+</html>

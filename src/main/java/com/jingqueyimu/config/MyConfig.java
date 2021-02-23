@@ -76,19 +76,19 @@ public class MyConfig {
         this.fileStoragePath = fileStoragePath;
     }
 
-	public String getSuperAdminName() {
-		return superAdminName;
-	}
+    public String getSuperAdminName() {
+        return superAdminName;
+    }
 
-	public void setSuperAdminName(String superAdminName) {
-		this.superAdminName = superAdminName;
-	}
+    public void setSuperAdminName(String superAdminName) {
+        this.superAdminName = superAdminName;
+    }
 
-	public String getSuperAdminPwd() {
-		return superAdminPwd;
-	}
+    public String getSuperAdminPwd() {
+        return superAdminPwd;
+    }
 
-	public void setSuperAdminPwd(String superAdminPwd) {
-		this.superAdminPwd = superAdminPwd;
-	}
+    public void setSuperAdminPwd(String superAdminPwd) {
+        this.superAdminPwd = superAdminPwd;
+    }
 }
