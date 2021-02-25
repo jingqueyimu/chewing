@@ -12,6 +12,7 @@ import com.jingqueyimu.annotation.Perm;
 import com.jingqueyimu.controller.BaseController;
 import com.jingqueyimu.model.Feedback;
 import com.jingqueyimu.model.bean.ResultData;
+import com.jingqueyimu.model.vo.FeedbackVO;
 import com.jingqueyimu.service.FeedbackService;
 import com.jingqueyimu.util.SysUtil;
 
@@ -38,7 +39,7 @@ public class ConsoleFeedbackController extends BaseController {
     public ResultData page(@RequestBody JSONObject params) {
         int pageNum = params.getIntValue("pageNum");
         int pageSize = params.getIntValue("pageSize");
-        PageInfo<Feedback> page = feedbackService.page(pageNum, pageSize, params);
+        PageInfo<FeedbackVO> page = feedbackService.pageFeedback(pageNum, pageSize, params);
         return ResultData.succ(page);
     }
     

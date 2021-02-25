@@ -321,7 +321,7 @@ public class ViewConsoleController extends BaseController {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/console/notice-list");
         mv.addObject("params", params);
-        mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params));
+        mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params, "id", false));
         return mv;
     }
 }

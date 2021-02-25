@@ -18,5 +18,6 @@
         <if test="username_like != null and username_like != ''">
             AND u.username LIKE '%${username_like}%'
         </if>
+        ORDER BY id DESC
     </select>
 </mapper>

@@ -2,9 +2,11 @@ package com.jingqueyimu.service;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,10 +200,23 @@ public abstract class BaseService<T> {
     /**
      * 查询多个实体
      *
+     * @param params
      * @return
      */
     public List<T> list(JSONObject params) {
-        Example example = buildExample(params);
+        return list(params, null, true);
+    }
+    
+    /**
+     * 查询多个实体,并指定默认排序
+     *
+     * @param params
+     * @param orderField
+     * @param isAsc
+     * @return
+     */
+    public List<T> list(JSONObject params, String orderField, boolean isAsc) {
+        Example example = buildExample(params, orderField, isAsc);
         return mapper.selectByExample(example);
     }
     
@@ -215,8 +230,9 @@ public abstract class BaseService<T> {
     }
     
     /**
-     * 统计多个实体数量
+     * 统计实体数量
      *
+     * @param params
      * @return
      */
     public int count(JSONObject params) {
@@ -227,13 +243,27 @@ public abstract class BaseService<T> {
     /**
      * 分页查询实体
      *
-     * @author zhuangyilian
      * @param pageNum
      * @param pageSize
      * @param params
      * @return
      */
     public PageInfo<T> page(int pageNum, int pageSize, JSONObject params) {
+        return page(pageNum, pageSize, params, null, true);
+    }
+    
+    /**
+     * 分页查询实体,并指定默认排序
+     *
+     * @author zhuangyilian
+     * @param pageNum
+     * @param pageSize
+     * @param params
+     * @param orderField
+     * @param isAsc
+     * @return
+     */
+    public PageInfo<T> page(int pageNum, int pageSize, JSONObject params, String orderField, boolean isAsc) {
         if (pageNum < 1) {
             pageNum = 1;
         }
@@ -241,15 +271,20 @@ public abstract class BaseService<T> {
             pageSize = 10;
         }
         PageHelper.startPage(pageNum, pageSize);
-        List<T> list = null;
-        if (params == null || params.isEmpty()) {
-            list = mapper.selectAll();
-        } else {
-            Example example = buildExample(params);
-            list = mapper.selectByExample(example);
-        }
+        Example example = buildExample(params, orderField, isAsc);
+        List<T> list = mapper.selectByExample(example);
         PageInfo<T> page = new PageInfo<T>(list);
         return page;
+    }
+    
+    /**
+     * 组装查询条件
+     *
+     * @param params
+     * @return
+     */
+    private Example buildExample(JSONObject params) {
+        return buildExample(params, null, true);
     }
     
     /**
@@ -261,17 +296,28 @@ public abstract class BaseService<T> {
      * xxx_like 模糊查询
      * xxx_llike 左模糊查询
      * xxx_rlike 右模糊查询
+     * _orderby 排序子句
      * 其他 等于
      * 属性值为空时,不参与查询
      *
      * @param params
+     * @param orderField
+     * @param isAsc
      * @return
      */
-    private Example buildExample(JSONObject params) {
+    private Example buildExample(JSONObject params, String orderField, boolean isAsc) {
+        if (params == null) {
+            params = new JSONObject();
+        }
         Example example = new Example(entityClass);
         Example.Criteria criteria = example.createCriteria();
+        // 排除属性
+        List<String> excludeAttrs = Arrays.asList("_orderby");
         for (String key : params.keySet()) {
-            if (params.get(key) == null || "".equals(params.get(key).toString().trim())) {
+            if (excludeAttrs.contains(key)) {
+                continue;
+            }
+            if (StringUtils.isBlank(params.getString(key))) {
                 continue;
             }
             if (key.endsWith("_begin")) {
@@ -290,7 +336,40 @@ public abstract class BaseService<T> {
                 criteria.andEqualTo(key, params.get(key));
             }
         }
+        // 排序
+        String orderByClause = params.getString("_orderby");
+        if (StringUtils.isNotBlank(orderByClause)) {
+            example.setOrderByClause(formatOrderByClause(orderByClause));
+        } else if (StringUtils.isNotBlank(orderField)) {
+            if (isAsc) {
+                example.orderBy(orderField).asc();
+            } else {
+                example.orderBy(orderField).desc();
+            }
+        }
         return example;
+    }
+    
+    /**
+     * 格式化排序子句
+     * 对象属性转表字段(驼峰转下划线)
+     *
+     * @param orderByClause
+     * @return
+     */
+    private static String formatOrderByClause(String orderByClause) {
+        // 先将ASC/DESC转为小写,避免被格式化为下划线
+        orderByClause = orderByClause.replaceAll("(?i)asc", "asc").replaceAll("(?i)desc", "desc");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < orderByClause.length(); i++) {
+            char c = orderByClause.charAt(i);
+            if (c >= 'A' && c <= 'Z') {
+                sb.append('_').append(Character.toLowerCase(c));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString().replaceAll("(?i)asc", "ASC").replaceAll("(?i)desc", "DESC");
     }
     
     /**

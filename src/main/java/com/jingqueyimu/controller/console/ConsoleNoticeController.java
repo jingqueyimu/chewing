@@ -40,7 +40,7 @@ public class ConsoleNoticeController extends BaseController {
     public ResultData page(@RequestBody JSONObject params) {
         int pageNum = params.getIntValue("pageNum");
         int pageSize = params.getIntValue("pageSize");
-        PageInfo<Notice> page = noticeService.page(pageNum, pageSize, params);
+        PageInfo<Notice> page = noticeService.page(pageNum, pageSize, params, "id", false);
         return ResultData.succ(page);
     }
 
@@ -91,5 +91,20 @@ public class ConsoleNoticeController extends BaseController {
         Notice notice = JSONObject.toJavaObject(params, Notice.class);
         notice = noticeService.updateSelective(notice);
         return ResultData.succ(notice);
+    }
+    
+    /**
+     * 删除公告
+     *
+     * @param params
+     * @return
+     */
+    @Perm(group="system", name="删除公告", description="系统管理-公告列表-删除公告")
+    @RequestMapping("/delete")
+    public ResultData delete(@RequestBody JSONObject params) {
+        SysUtil.checkParam(params, "id", "请选择公告");
+        long id = params.getLongValue("id");
+        noticeService.deleteById(id);
+        return ResultData.succ();
     }
 }

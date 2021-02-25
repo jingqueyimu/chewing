@@ -56,7 +56,7 @@ public class FeedbackService extends BaseService<Feedback> {
      * @param params
      * @return
      */
-    public Object pageFeedback(int pageNum, int pageSize, JSONObject params) {
+    public PageInfo<FeedbackVO> pageFeedback(int pageNum, int pageSize, JSONObject params) {
         if (pageNum < 1) {
             pageNum = 1;
         }

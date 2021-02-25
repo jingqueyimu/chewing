@@ -40,7 +40,7 @@
     $(".pagination>.page-item").on("click", function(event){
       var text = event.currentTarget.innerText;
       if (text == "...") {
-          return;
+        return;
       }
       // 要请求的页面地址
       var url = [[${url}]];
@@ -59,15 +59,15 @@
       var targetPageNum;
       // 上一页
       if (text == "«") {
-          targetPageNum = pageNum - 1;
+        targetPageNum = pageNum - 1;
       // 下一页
       } else if (text == "»") {
-          targetPageNum = pageNum + 1;
+        targetPageNum = pageNum + 1;
       } else {
-          targetPageNum = parseInt(text);
+        targetPageNum = parseInt(text);
       }
       if (targetPageNum < 1 || targetPageNum > pages || targetPageNum == pageNum) {
-          return;
+        return;
       }
       var req = {
         pageNum: targetPageNum,
@@ -80,7 +80,7 @@
           document.write(resp);
           document.close();
         } else {
-        $(selector).html(resp);
+          $(selector).html(resp);
         }
       });
     });
@@ -93,46 +93,46 @@
   <input type="hidden" th:value="${pageInfo.pageSize}" id="pageSize">
   <input type="hidden" th:value="${pageInfo.pages}" id="pages">
   <div class="row d-flex justify-content-between">
-      <span class="text-secondary">共 [[${pageInfo?.total}]] 条记录</span>
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="上一页">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li th:if="${pageInfo.pageNum != 1}" class="page-item">
-          <a class="page-link" href="#">1</a>
-        </li>
-        <li th:if="${pageInfo.pageNum > 3}" class="page-item">
-          <a class="page-link" href="#">...</a>
-        </li>
-        <li th:if="${pageInfo.pageNum > 2}" class="page-item">
-          <a class="page-link" href="#" th:text="${pageInfo.pageNum - 1}"></a>
-        </li>
-        <li class="page-item active">
-          <a class="page-link" href="#" th:text="${pageInfo.pageNum}"></a>
-        </li>
-        <li th:if="${pageInfo.pageNum < pageInfo.pages - 1}" class="page-item">
-          <a class="page-link" href="#" th:text="${pageInfo.pageNum + 1}"></a>
-        </li>
-        <li th:if="${pageInfo.pageNum < pageInfo.pages - 2}" class="page-item">
-          <a class="page-link" href="#">...</a>
-        </li>
-        <li th:if="${pageInfo.pageNum != pageInfo.pages}" class="page-item">
-          <a class="page-link" href="#" th:text="${pageInfo.pages}"></a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="下一页">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
+    <span class="text-secondary">共 [[${pageInfo?.total}]] 条记录</span>
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="上一页">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li th:if="${pageInfo.pageNum != 1}" class="page-item">
+        <a class="page-link" href="#">1</a>
+      </li>
+      <li th:if="${pageInfo.pageNum > 3}" class="page-item">
+        <a class="page-link" href="#">...</a>
+      </li>
+      <li th:if="${pageInfo.pageNum > 2}" class="page-item">
+        <a class="page-link" href="#" th:text="${pageInfo.pageNum - 1}"></a>
+      </li>
+      <li class="page-item active">
+        <a class="page-link" href="#" th:text="${pageInfo.pageNum}"></a>
+      </li>
+      <li th:if="${pageInfo.pageNum < pageInfo.pages - 1}" class="page-item">
+        <a class="page-link" href="#" th:text="${pageInfo.pageNum + 1}"></a>
+      </li>
+      <li th:if="${pageInfo.pageNum < pageInfo.pages - 2}" class="page-item">
+        <a class="page-link" href="#">...</a>
+      </li>
+      <li th:if="${pageInfo.pageNum != pageInfo.pages}" class="page-item">
+        <a class="page-link" href="#" th:text="${pageInfo.pages}"></a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="下一页">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
   </div>
   <script th:inline="javascript">
     $(".pagination>.page-item").on("click", function(event){
       var text = event.currentTarget.innerText;
       if (text == "...") {
-          return;
+        return;
       }
       // 要请求的页面地址
       var url = [[${url}]];
@@ -151,15 +151,15 @@
       var targetPageNum;
       // 上一页
       if (text == "«") {
-          targetPageNum = pageNum - 1;
+        targetPageNum = pageNum - 1;
       // 下一页
       } else if (text == "»") {
-          targetPageNum = pageNum + 1;
+        targetPageNum = pageNum + 1;
       } else {
-          targetPageNum = parseInt(text);
+        targetPageNum = parseInt(text);
       }
       if (targetPageNum < 1 || targetPageNum > pages || targetPageNum == pageNum) {
-          return;
+        return;
       }
       var req = {
         pageNum: targetPageNum,
@@ -172,9 +172,44 @@
           document.write(resp);
           document.close();
         } else {
-        $(selector).html(resp);
+          $(selector).html(resp);
         }
       });
     });
   </script>
 </nav>
+<!-- 确认框 -->
+<div th:fragment="confirm">
+  <div class="modal fade" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <h6 class="modal-title">是否执行该操作？</h6>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" id="modal-confirm-sure">确定</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script th:inline="javascript">
+    function confirm(msg, callback) {
+      if (!isEmpty(msg)) {
+        $("#modal-confirm .modal-title").html(msg);
+      }
+      if(callback != undefined && typeof(callback) == 'function'){
+        $("#modal-confirm-sure").on("click", function() {
+          $("#modal-confirm").modal('hide');
+          callback();
+        });
+      }
+      $("#modal-confirm").modal('show');
+    }
+  </script>
+</div>

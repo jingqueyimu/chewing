@@ -46,8 +46,11 @@
                   <td th:text="${item.readCount}"></td>
                   <td th:text="${#dates.format(item.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
                   <td>
-                    <a class="text-primary" href="#" title="编辑" data-toggle="modal" data-target="#modal-edit-notice" th:data-notice-id="${item.id}">
+                    <a class="text-primary mr-2" href="#" title="编辑" data-toggle="modal" data-target="#modal-edit-notice" th:data-notice-id="${item.id}">
                       <i data-feather="edit"></i>
+                    </a>
+                    <a class="text-primary my-notice-delete" href="#" title="删除" th:data-notice-id="${item.id}">
+                      <i data-feather="trash-2"></i>
                     </a>
                   </td>
                 </tr>
@@ -199,8 +202,8 @@
       
       // 更新公告
       $("#btn-edit-notice-save").on("click", function(event) {
-          var imgs = $("#edit-notice-content").children().eq(0).find("img");
-          var content = $("#edit-notice-content").children().eq(0).html();
+        var imgs = $("#edit-notice-content").children().eq(0).find("img");
+        var content = $("#edit-notice-content").children().eq(0).html();
         var req = {
           id: $("#notice-id").val(),
           title: $("#edit-notice-title").val(),
@@ -248,6 +251,21 @@
           return text;
         }
       }
+      
+      $(".my-notice-delete").on("click", function(event) {
+        var noticeId = event.currentTarget.dataset.noticeId;
+        confirm("是否删除该公告？", function() {
+          postJson("/console/notice/delete", {id: noticeId}, function(resp) {
+            if (!isSucc(resp)) {
+              alertFail(resp.msg);
+              return;
+            }
+            alertSucc("删除成功", function () {
+              location.reload();
+            });
+          });
+        });
+      });
     </script>
   </body>
 </html>
