@@ -358,18 +358,40 @@ public abstract class BaseService<T> {
      * @return
      */
     private static String formatOrderByClause(String orderByClause) {
-        // 先将ASC/DESC转为小写,避免被格式化为下划线
-        orderByClause = orderByClause.replaceAll("(?i)asc", "asc").replaceAll("(?i)desc", "desc");
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < orderByClause.length(); i++) {
-            char c = orderByClause.charAt(i);
+        String[] clauseParts = orderByClause.trim().split(",");
+        for (String part : clauseParts) {
+            String[] items = part.trim().split("\\s+");
+            for (String item : items) {
+                item = item.trim();
+                if ("asc".equalsIgnoreCase(item) || "desc".equalsIgnoreCase(item)) {
+                    sb.append(" ").append(item);
+                } else {
+                    sb.append(camelhumpToUnderline(item));
+                }
+            }
+            sb.append(", ");
+        }
+        return sb.substring(0, sb.length() -2);
+    }
+    
+    /**
+     * 驼峰风格转下划线风格
+     *
+     * @param inputString
+     * @return
+     */
+    private static String camelhumpToUnderline(String inputString) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < inputString.length(); i++) {
+            char c = inputString.charAt(i);
             if (c >= 'A' && c <= 'Z') {
                 sb.append('_').append(Character.toLowerCase(c));
             } else {
                 sb.append(c);
             }
         }
-        return sb.toString().replaceAll("(?i)asc", "ASC").replaceAll("(?i)desc", "DESC");
+        return sb.toString();
     }
     
     /**
