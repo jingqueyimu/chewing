@@ -219,6 +219,22 @@ body {
   cursor: pointer;
 }
 
+.my-img-empty {
+  border: 1px solid #ced4da;
+  text-align: center;
+  width: 5rem;
+  height: 5rem;
+  cursor: pointer;
+  color: #ced4da;
+  font-size: 2.4rem;
+}
+
+.my-mid-vertical {
+  float: none;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 /***************** 覆盖bootstrap的样式 *****************/
 
 .dropdown-item.active, .dropdown-item:active {

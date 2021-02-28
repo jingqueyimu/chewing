@@ -17,5 +17,5 @@ public class BizConstant {
     /**
      * 默认头像
      */
-    public static final String DEFAULT_AVATAR = "images" + File.separator + "avatar.jpg";
+    public static final String DEFAULT_AVATAR = File.separator + "images" + File.separator + "avatar.jpg";
 }

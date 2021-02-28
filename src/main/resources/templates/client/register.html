@@ -6,7 +6,7 @@
     <!-- 顶部 -->
     <header th:replace="/client/tpl/tpl-common::top"></header>
     <div class="text-center my-main-top">
-      <img class="my-login-logo mt-5" src="/images/logo.jpg" alt="Chewing" width="72" height="72">
+      <img class="my-login-logo mt-5" th:src="${site_logo}" alt="logo" width="72" height="72">
       <form class="my-form-signin" id="register">
         <input type="hidden" value="false" id="is-get-code">
         <h1 class="h3 mb-3 font-weight-normal">账户注册</h1>

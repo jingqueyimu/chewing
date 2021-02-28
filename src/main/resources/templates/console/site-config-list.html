@@ -43,6 +43,7 @@
                   <th scope="col">配置代码</th>
                   <th scope="col">配置名称</th>
                   <th scope="col">配置内容</th>
+                  <th scope="col">配置内容类型</th>
                   <th scope="col">描述</th>
                   <th scope="col">是否公开</th>
                   <th scope="col">操作</th>
@@ -54,6 +55,7 @@
                   <td th:text="${c.code}"></td>
                   <td th:text="${c.name}"></td>
                   <td th:text="${c.content}"></td>
+                  <td th:text="${siteConfigContentTypeMap[c.contentType]}"></td>
                   <td th:text="${c.description}"></td>
                   <td th:text="${c.publicFlag == true ? '是' : '否'}"></td>
                   <td>
@@ -63,7 +65,7 @@
                   </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(pageInfo?.list)}">
-                  <td class="text-center" colspan="7">暂无数据</td>
+                  <td class="text-center" colspan="8">暂无数据</td>
                 </tr>
               </tbody>
             </table>
@@ -99,9 +101,29 @@
                 </div>
               </div>
               <div class="form-group row">
+                <label class="col-sm-2 col-form-label">配置内容类型</label>
+                <div class="col-sm-10">
+                  <select class="custom-select mr-sm-2" name="site-config-content-type">
+                    <option th:each="t : ${siteConfigContentTypes}" th:value="${t.code}" th:text="${t.value}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label">配置内容</label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" name="site-config-content" rows="3"></textarea>
+                  <!-- 文本内容 -->
+                  <textarea class="form-control my-site-config-content-item" name="site-config-content" rows="3"></textarea>
+                  <!-- 图片内容 -->
+                  <div class="my-site-config-content-item d-none">
+                    <input type="file" class="d-none" id="add-site-config-content-file">
+                    <label for="add-site-config-content-file" class="d-none">
+                      <input type="hidden">
+                      <img name="site-config-content" style="width: 5rem;height: 5rem;cursor: pointer;">
+                    </label>
+                    <label for="add-site-config-content-file" class="my-img-empty">
+                      <span class="my-mid-vertical">+</span>
+                    </label>
+                  </div>
                 </div>
               </div>
               <div class="form-group row">
@@ -153,9 +175,26 @@
                 </div>
               </div>
               <div class="form-group row">
+                <label class="col-sm-2 col-form-label">配置内容类型</label>
+                <div class="col-sm-10">
+                  <select class="custom-select mr-sm-2" name="site-config-content-type" disabled>
+                    <option th:each="t : ${siteConfigContentTypes}" th:value="${t.code}" th:text="${t.value}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
                 <label class="col-sm-2 col-form-label">配置内容</label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" name="site-config-content" rows="3"></textarea>
+                  <!-- 文本内容 -->
+                  <textarea class="form-control my-site-config-content-item" name="site-config-content" rows="3"></textarea>
+                  <!-- 图片内容 -->
+                  <div class="my-site-config-content-item d-none">
+                    <input type="file" class="d-none" id="edit-site-config-content-file">
+                    <label for="edit-site-config-content-file">
+                      <input type="hidden">
+                      <img name="site-config-content" style="width: 5rem;height: 5rem;cursor: pointer;">
+                    </label>
+                  </div>
                 </div>
               </div>
               <div class="form-group row">
@@ -185,6 +224,7 @@
     <input type="hidden" id="site-config-id">
     <script th:inline="javascript">
       feather.replace();
+      var serverUrl = [[${serverUrl}]];
 
       // 重置
       $("#btn-reset").on("click", function() {
@@ -196,8 +236,82 @@
       $("#btn-search").on("click", function() {
         pageSearch("/console/site_config/list.v", [[${pageInfo}]], "#form-search", [], ["publicFlag"]);
       });
+      
+      // 选择配置内容类型
+      $("#modal-add-site-config select[name='site-config-content-type']").on("change", function() {
+        showSiteConfigContent("#modal-add-site-config", $(this).val());
+      })
+      
+      // 显示配置内容
+      function showSiteConfigContent(modalId, contentType) {
+        contentType = parseInt(contentType);
+        $(modalId + " .my-site-config-content-item").addClass("d-none");
+        if (contentType > 0) {
+          $(modalId + " .my-site-config-content-item").eq(contentType - 1).removeClass("d-none");
+        } else {
+          $(modalId + " .my-site-config-content-item").eq(0).removeClass("d-none");
+        }
+      }
+      
+      // 获取配置内容
+      function getSiteConfigContent(modalId, contentType) {
+        var content;
+        // 文本
+        if (contentType == 1) {
+          content = $(modalId + " .my-site-config-content-item").eq(0).val();
+        // 图片
+        } else if (contentType == 2) {
+          content = $(modalId + " .my-site-config-content-item").eq(1).find("input[type='hidden']").eq(0).val();
+        }
+        return content;
+      }
+      
+      // 设置配置内容
+      function setSiteConfigContent(modalId, content) {
+        var contentType = $(modalId + " select[name='site-config-content-type']").val()
+        // 文本
+        if (contentType == 1) {
+          $(modalId + " .my-site-config-content-item").eq(0).val(content);
+        // 图片
+        } else if (contentType == 2) {
+          $(modalId + " .my-site-config-content-item").eq(1).find("input[type='hidden']").eq(0).val(content);
+          if (isEmpty(content)) {
+            $(modalId + " .my-site-config-content-item").eq(1).find("img").eq(0).attr("src", null);
+          } else {
+            $(modalId + " .my-site-config-content-item").eq(1).find("img").eq(0).attr("src", serverUrl + content);
+          }
+        }
+      }
 
-      // 编辑网站配置
+      // 添加网站配置-选择图片
+      $("#add-site-config-content-file").on("change", function() {
+        uploadFile("#add-site-config-content-file", function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          var imgUrl = serverUrl + resp.data;
+          $("#add-site-config-content-file").siblings().eq(0).children("img").attr("src", imgUrl);
+          $("#add-site-config-content-file").siblings().eq(0).children("input[type='hidden']").val(resp.data);
+          $("#add-site-config-content-file").siblings().eq(0).removeClass("d-none");
+          $("#add-site-config-content-file").siblings().eq(1).addClass("d-none");
+        });
+      });
+      
+      // 编辑网站配置-选择图片
+      $("#edit-site-config-content-file").on("change", function() {
+        uploadFile("#edit-site-config-content-file", function(resp) {
+          if (!isSucc(resp)) {
+            alertFail(resp.msg);
+            return;
+          }
+          var imgUrl = serverUrl + resp.data;
+          $("#edit-site-config-content-file").siblings().eq(0).children("img").attr("src", imgUrl);
+          $("#edit-site-config-content-file").siblings().eq(0).children("input[type='hidden']").val(resp.data);
+        });
+      });
+
+      // 编辑网站配置--模态框
       $("#modal-edit-site-config").on("show.bs.modal", function (event) {
         var siteConfigId = event.relatedTarget.dataset.siteConfigId;
         postJson("/console/site_config/get", {id: siteConfigId}, function(resp){
@@ -209,18 +323,21 @@
           $("#site-config-id").val(siteConfig.id);
           $("#modal-edit-site-config input[name='site-config-code']").val(siteConfig.code);
           $("#modal-edit-site-config input[name='site-config-name']").val(siteConfig.name);
-          $("#modal-edit-site-config textarea[name='site-config-content']").val(siteConfig.content);
+          $("#modal-edit-site-config select[name='site-config-content-type']").val(siteConfig.contentType);
           $("#modal-edit-site-config input[name='site-config-description']").val(siteConfig.description);
           $("#modal-edit-site-config select[name='site-config-public-flag']").val(siteConfig.publicFlag + "");
+          setSiteConfigContent("#modal-edit-site-config", siteConfig.content);
+          showSiteConfigContent("#modal-edit-site-config", siteConfig.contentType);
         });
       })
 
       // 保存网站配置
       $("#btn-edit-site-config-save").on("click", function(){
+        var contentType = $("#modal-edit-site-config select[name='site-config-content-type']").val();
         var req = {
           id: $("#site-config-id").val(),
           name: $("#modal-edit-site-config input[name='site-config-name']").val(),
-          content: $("#modal-edit-site-config textarea[name='site-config-content']").val(),
+          content: getSiteConfigContent("#modal-edit-site-config", contentType),
           description: $("#modal-edit-site-config input[name='site-config-description']").val(),
           publicFlag: $("#modal-edit-site-config select[name='site-config-public-flag']").val()
         };
@@ -230,8 +347,8 @@
         }
         postJson("/console/site_config/update", req, function(resp) {
           if (!isSucc(resp)) {
-              alertFail(resp.msg);
-              return;
+            alertFail(resp.msg);
+            return;
           }
           $("#modal-edit-site-config").modal("hide");
           alertSucc("编辑网站配置成功");
@@ -240,17 +357,19 @@
           var siteConfigCols = $("#" + req.id).children();
           siteConfigCols.eq(2).text(siteConfig.name);
           siteConfigCols.eq(3).text(siteConfig.content);
-          siteConfigCols.eq(4).text(siteConfig.description);
-          siteConfigCols.eq(5).text(siteConfig.publicFlag ? "是" : "否");
+          siteConfigCols.eq(5).text(siteConfig.description);
+          siteConfigCols.eq(6).text(siteConfig.publicFlag ? "是" : "否");
         });
       });
-
+      
       // 添加网站配置
       $("#btn-add-site-config-save").on("click", function(){
+        var contentType = $("#modal-add-site-config select[name='site-config-content-type']").val();
         var req = {
           code: $("#modal-add-site-config input[name='site-config-code']").val(),
           name: $("#modal-add-site-config input[name='site-config-name']").val(),
-          content: $("#modal-add-site-config textarea[name='site-config-content']").val(),
+          contentType: contentType,
+          content: getSiteConfigContent("#modal-add-site-config", contentType),
           description: $("#modal-add-site-config input[name='site-config-description']").val(),
           publicFlag: $("#modal-add-site-config select[name='site-config-public-flag']").val()
         };
@@ -263,6 +382,10 @@
           alertFail("请输入配置名称");
           return;
         }
+        if (isEmpty(req.contentType)){
+          alertFail("请选择配置内容类型");
+          return;
+        }
         if (isEmpty(req.content)){
           alertFail("请输入配置内容");
           return;
@@ -273,8 +396,8 @@
         }
         postJson("/console/site_config/save", req, function(resp) {
           if (!isSucc(resp)) {
-              alertFail(resp.msg);
-              return;
+            alertFail(resp.msg);
+            return;
           }
           $("#modal-add-site-config").modal("hide");
           alertSucc("添加配置成功", function() {

@@ -34,4 +34,17 @@ public class SiteConfigController extends BaseController {
         SiteConfig siteConfig = siteConfigService.get(params);
         return ResultData.succ(siteConfig);
     }
+    
+    /**
+     * 获取配置内容
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping("/get_content")
+    public ResultData getContent(@RequestBody JSONObject params) {
+        params.put("publicFlag", true);
+        SiteConfig siteConfig = siteConfigService.get(params);
+        return ResultData.succ(siteConfig == null ? null : siteConfig.getContent());
+    }
 }

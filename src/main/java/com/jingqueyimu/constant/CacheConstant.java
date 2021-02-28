@@ -36,4 +36,14 @@ public class CacheConstant {
      * 图形验证码
      */
     public static final String CAPTCHA_CODE = "captcha_code_";
+    
+    /**
+     * 公有网站配置
+     */
+    public static final String PUB_SITE_CONFIG = "pub_site_config";
+    
+    /**
+     * 私有网站配置
+     */
+    public static final String PRI_SITE_CONFIG = "pri_site_config";
 }

@@ -1,8 +1,19 @@
 [
     {
         "initKey": "site_config_20210110",
+        "remark": "网站备案号",
         "sqls": [
-            "INSERT INTO t_site_config (id, code, name, content, description, public_flag, gmt_create) VALUES(NULL, 'site_record_no', '网站备案号', '<a href=\"https://beian.miit.gov.cn\" class=\"ml-2\" target=\"_blank\">备案号</a>', '网站备案号', true, NOW());"
+            "INSERT INTO t_site_config (id, code, name, content, content_type, description, public_flag, gmt_create) VALUES(NULL, 'site_record_no', '网站备案号', '<a href=\"https://beian.miit.gov.cn\" class=\"ml-2\" target=\"_blank\">备案号</a>', '1', '网站备案号', true, NOW());"
+        ]
+    },
+    {
+        "initKey": "site_config_20210228",
+        "remark": "网站信息(logo,icon,关键词,描述)",
+        "sqls": [
+            "INSERT INTO t_site_config (id, code, name, content, content_type, description, public_flag, gmt_create) VALUES(NULL, 'site_logo', '网站LOGO', '/images/logo.jpg', '2', '网站LOGO', true, NOW());",
+            "INSERT INTO t_site_config (id, code, name, content, content_type, description, public_flag, gmt_create) VALUES(NULL, 'site_icon', '网站ICON', '/images/favicon.ico', '2', '网站ICON', true, NOW());",
+            "INSERT INTO t_site_config (id, code, name, content, content_type, description, public_flag, gmt_create) VALUES(NULL, 'site_meta_keywords', '网站关键词', 'Chewing,Java,脚手架', '1', '针对搜索引擎的关键词,SEO优化', true, NOW());",
+            "INSERT INTO t_site_config (id, code, name, content, content_type, description, public_flag, gmt_create) VALUES(NULL, 'site_meta_description', '网站描述', 'Chewing——Java 项目快速开发脚手架！', '1', '网站描述,SEO优化', true, NOW());"
         ]
     }
 ]

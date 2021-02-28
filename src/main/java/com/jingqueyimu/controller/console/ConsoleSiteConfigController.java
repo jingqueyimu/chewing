@@ -71,14 +71,10 @@ public class ConsoleSiteConfigController extends BaseController {
     public ResultData save(@RequestBody JSONObject params) {
         SysUtil.checkParam(params, "code", "请输入配置代码");
         SysUtil.checkParam(params, "name", "请输入配置名称");
+        SysUtil.checkParam(params, "contentType", "请选择配置内容类型");
         SysUtil.checkParam(params, "content", "请输入配置内容");
         SysUtil.checkParam(params, "publicFlag", "请选择是否公开访问");
-        SiteConfig siteConfig = siteConfigService.getByCode(params.getString("code"));
-        if (siteConfig != null) {
-            throw new AppException(StatusCode.ERR_PARAM, "配置代码已存在");
-        }
-        siteConfig = JSONObject.toJavaObject(params, SiteConfig.class);
-        siteConfig = siteConfigService.save(siteConfig);
+        SiteConfig siteConfig = siteConfigService.saveSiteConfig(params);
         return ResultData.succ(siteConfig);
     }
     
@@ -92,9 +88,7 @@ public class ConsoleSiteConfigController extends BaseController {
     @RequestMapping("/update")
     public ResultData update(@RequestBody JSONObject params) {
         SysUtil.checkParam(params, "id", "请选择配置");
-        params.remove("code");
-        SiteConfig siteConfig = JSONObject.toJavaObject(params, SiteConfig.class);
-        siteConfig = siteConfigService.updateSelective(siteConfig);
+        SiteConfig siteConfig = siteConfigService.updateSiteConfig(params);
         return ResultData.succ(siteConfig);
     }
 }

@@ -20,10 +20,12 @@ import com.jingqueyimu.constant.BizConstant;
 import com.jingqueyimu.constant.CacheConstant;
 import com.jingqueyimu.model.Admin;
 import com.jingqueyimu.model.Permission;
+import com.jingqueyimu.model.SiteConfig;
 import com.jingqueyimu.service.AdminPermissionService;
 import com.jingqueyimu.service.AdminService;
 import com.jingqueyimu.service.DbInitService;
 import com.jingqueyimu.service.PermissionService;
+import com.jingqueyimu.service.SiteConfigService;
 import com.jingqueyimu.service.component.RedisService;
 import com.jingqueyimu.util.SysUtil;
 import com.jingqueyimu.util.ResourceUtil;
@@ -55,6 +57,8 @@ public class InitRunner implements CommandLineRunner {
     private ResourceUtil resourceUtil;
     @Autowired
     private DbInitService dbInitService;
+    @Autowired
+    private SiteConfigService siteConfigService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -67,6 +71,8 @@ public class InitRunner implements CommandLineRunner {
         initSuperAdminPermission();
         // 加载管理员权限
         loadAdminPermession();
+        // 加载公有网站配置
+        loadPubSiteConfig();
     }
     
     /**
@@ -147,5 +153,19 @@ public class InitRunner implements CommandLineRunner {
             // 将管理员权限放入缓存
             redisService.set(CacheConstant.ADMIN_PERMISSION + admin.getId(), adminPermissionPaths);
         }
+    }
+    
+    /**
+     * 加载公有网站配置
+     */
+    private void loadPubSiteConfig() {
+        JSONObject params = new JSONObject();
+        params.put("publicFlag", true);
+        List<SiteConfig> list = siteConfigService.list(params);
+        JSONObject siteConfigData = new JSONObject();
+        for (SiteConfig siteConfig : list) {
+            siteConfigData.put(siteConfig.getCode(), siteConfig.getContent());
+        }
+        redisService.set(CacheConstant.PUB_SITE_CONFIG, siteConfigData);
     }
 }

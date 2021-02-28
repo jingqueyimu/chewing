@@ -45,6 +45,12 @@ public class SiteConfig extends BaseModel {
     private String content;
     
     /**
+     * 内容类型(字典: SiteConfigContentType)
+     */
+    @Column(name="content_type", columnDefinition="tinyint default 1")
+    private Integer contentType;
+    
+    /**
      * 描述
      */
     @Column(name="description", length=1024)
@@ -98,6 +104,14 @@ public class SiteConfig extends BaseModel {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(Integer contentType) {
+        this.contentType = contentType;
     }
 
     public String getDescription() {

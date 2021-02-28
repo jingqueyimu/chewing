@@ -19,6 +19,7 @@ import com.jingqueyimu.context.AdminContext;
 import com.jingqueyimu.context.UserContext;
 import com.jingqueyimu.model.bean.CurrAdmin;
 import com.jingqueyimu.model.bean.CurrUser;
+import com.jingqueyimu.service.SiteConfigService;
 import com.jingqueyimu.service.component.RedisService;
 import com.jingqueyimu.util.SysUtil;
 
@@ -40,6 +41,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
     private AdminContext adminContext;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private SiteConfigService siteConfigService;
     
     /**
      * 在请求处理之前调用(Controller方法调用之前)
@@ -81,6 +84,8 @@ public class GlobalInterceptor implements HandlerInterceptor {
         }
         // 服务地址
         modelAndView.addObject("serverUrl", SysUtil.getServerUrl(request));
+        // 公有网站配置
+        modelAndView.addAllObjects(siteConfigService.getPubSiteConfigData());
         String servletPath = request.getServletPath();
         if (servletPath.startsWith("/console/") || "/console".equals(servletPath)) {
             CurrAdmin currAdmin = adminContext.getCurrAdmin();

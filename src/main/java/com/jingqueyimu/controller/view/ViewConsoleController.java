@@ -23,6 +23,7 @@ import com.jingqueyimu.model.dict.PermissionGroup;
 import com.jingqueyimu.model.dict.RegisterType;
 import com.jingqueyimu.model.dict.ScheduleJobExecuteStatus;
 import com.jingqueyimu.model.dict.ScheduleJobStatus;
+import com.jingqueyimu.model.dict.SiteConfigContentType;
 import com.jingqueyimu.model.vo.PermissionWithAccessVO;
 import com.jingqueyimu.service.AdminService;
 import com.jingqueyimu.service.FeedbackService;
@@ -276,6 +277,8 @@ public class ViewConsoleController extends BaseController {
         mv.setViewName("/console/site-config-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", siteConfigService.page(pageNum, pageSize, params));
+        mv.addObject("siteConfigContentTypes", SiteConfigContentType.values());
+        mv.addObject("siteConfigContentTypeMap", SiteConfigContentType.getEnumInfo());
         return mv;
     }
     

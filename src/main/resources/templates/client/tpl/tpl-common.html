@@ -2,13 +2,13 @@
 <head th:fragment="head(title)">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="keywords" content="">
-  <meta name="description" content="Chewing——Java 项目快速开发脚手架！">
+  <meta name="keywords" th:content="${site_meta_keywords}">
+  <meta name="description" th:content="${site_meta_description}">
   <title th:text="${title}"></title>
   <!-- 网站上显示logo图标 -->
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" th:href="${site_icon}">
   <!-- 收藏用logo图标 -->
-  <link rel="bookmark" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="bookmark" type="image/x-icon" th:href="${site_icon}">
   <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/bootstrap/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="/css/common.css">
@@ -44,7 +44,7 @@
   <div class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container d-flex justify-content-between">
       <a href="/index.v" class="navbar-brand d-flex align-items-center">
-        <img src="/images/logo.jpg" class="my-navbar-logo">
+        <img th:src="${site_logo}" alt="logo" class="my-navbar-logo">
         <strong>Chewing</strong>
       </a>
       <div>
@@ -113,10 +113,8 @@
   <script type="text/javascript">
     $(function () {
       // 网站备案号
-      postJson("/site_config/get", { code: "site_record_no" }, function (resp) {
-        if (!isEmpty(resp.data)) {
-          $("#site-record-no").html(resp.data.content);
-        }
+      postJson("/site_config/get_content", { code: "site_record_no" }, function (resp) {
+        $("#site-record-no").html(resp.data);
       });
     });
   </script>

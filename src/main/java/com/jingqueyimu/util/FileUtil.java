@@ -37,7 +37,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static String uploadFile(InputStream is, String storagePath, String fileName) {
         try {
             String datePath = getDatePath();
-            String storageDatePath = storagePath.concat(File.separator).concat(getDatePath());
+            String storageDatePath = formatStoragePath(storagePath).concat(datePath);
             // 重命名文件
             fileName = renameFile(fileName);
             // 文件存储路径
@@ -54,12 +54,12 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * 文件下载
      *
-     * @param filePath
+     * @param fileAbsolutePath
      * @param os
      * @return
      */
-    public static boolean downloadFile(String filePath, OutputStream os) {
-        return downloadFile(new File(filePath), os);
+    public static boolean downloadFile(String fileAbsolutePath, OutputStream os) {
+        return downloadFile(new File(fileAbsolutePath), os);
     }
     
     /**
@@ -116,7 +116,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @return
      */
     public static String makeDateDirs(String storagePath) {
-        return makeDirs(storagePath.concat(File.separator).concat(getDatePath()));
+        return makeDirs(formatStoragePath(storagePath).concat(getDatePath()));
     }
     
     /**
@@ -125,7 +125,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @return
      */
     public static String getDatePath() {
-        return sdf.format(new Date()).replace("/", File.separator);
+        return File.separator.concat(sdf.format(new Date()).replace("/", File.separator));
     }
     
     /**
@@ -167,11 +167,52 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @return
      */
     public static String getFileName(String fileUrl) {
-        String[] fileUrls = fileUrl.split(File.separator);
+        String[] fileUrls = fileUrl.split("[/|\\\\]");
         if (fileUrls.length > 1) {
-            return fileUrls[fileUrls.length - -1];
+            return fileUrls[fileUrls.length - 1].trim();
         } else {
-            return fileUrl;
+            return fileUrl.trim();
+        }
+    }
+    
+    /**
+     * 获取绝对路径
+     *
+     * @param storagePath
+     * @param filePath
+     * @return
+     */
+    public static String getAbsolutePath(String storagePath, String filePath) {
+        return Paths.get(formatStoragePath(storagePath).concat(formatFilePath(filePath))).toAbsolutePath().toString();
+    }
+    
+    /**
+     * 格式化存放路径
+     *
+     * @param storagePath
+     * @return
+     */
+    private static String formatStoragePath(String storagePath) {
+        // 不以分隔符结尾
+        if (storagePath.endsWith("/") || storagePath.endsWith("\\")) {
+            return storagePath.substring(0, storagePath.length() - 1);
+        } else {
+            return storagePath;
+        }
+    }
+    
+    /**
+     * 格式化内部文件路径
+     *
+     * @param filePath
+     * @return
+     */
+    private static String formatFilePath(String filePath) {
+        // 以分隔符开头
+        if (filePath.startsWith("/") || filePath.startsWith("\\")) {
+            return filePath;
+        } else {
+            return File.separator.concat(filePath.substring(1, filePath.length()));
         }
     }
 }

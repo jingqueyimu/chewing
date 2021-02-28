@@ -3,6 +3,7 @@ package com.jingqueyimu.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -55,6 +56,7 @@ public class DbInitService extends BaseService<DbInit> {
      *
      * @param data
      */
+    @Transactional(rollbackFor = Exception.class)
     public void doDbInit(JSONObject data) {
         // 校验数据库初始化数据
         DbInitUtil.checkDbInitData(data);

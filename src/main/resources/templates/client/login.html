@@ -5,7 +5,7 @@
     <!-- 顶部 -->
     <header th:replace="/client/tpl/tpl-common::top"></header>
     <div class="text-center my-main-top">
-      <img class="my-login-logo mt-5" src="/images/logo.jpg" alt="Chewing" width="72" height="72">
+      <img class="my-login-logo mt-5" th:src="${site_logo}" alt="logo" width="72" height="72">
       <form class="my-form-signin" id="login">
         <h1 class="h3 mb-3 font-weight-normal">密码登录</h1>
         <input type="text" name="account" id="account" class="form-control" placeholder="用户名/手机号/邮箱" maxlength="32" required autofocus>

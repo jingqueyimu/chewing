@@ -127,7 +127,6 @@ function postJson(url, req, callback) {
     $.ajax({
         url: url,
         type: "post",
-        async: false,
         data: JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -275,7 +274,6 @@ function uploadFile(fileId, callback) {
         url: "/file/upload",
         dataType: "json",
         type: "post",
-        async: false,
         data: formData,
         processData: false,    // 不对数据进行处理（默认会转为查询字符串）
         contentType: false,    // 不设置Content-Type请求头
@@ -302,7 +300,6 @@ function uploadFiles(fileId, callback) {
         url: "/file/uploads",
         dataType: "json",
         type: "post",
-        async: false,
         data: formData,
         processData: false,    // 不对数据进行处理（默认会转为查询字符串）
         contentType: false,    // 不设置Content-Type请求头
@@ -436,4 +433,37 @@ function richEditor(selector) {
       theme: 'snow'
     });
     return quill;
+}
+
+/**
+ * 图片转Base64
+ * 
+ * @param image
+ * @returns
+ */
+function imageToBase64(image) {
+    var canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0, image.width, image.height);
+    var ext = image.src.substring(image.src.lastIndexOf(".") + 1).toLowerCase();
+    var dataURL = canvas.toDataURL("image/" + ext);
+    return dataURL;
+}
+
+/**
+ * 图片转Base64
+ * 
+ * @param imageUrl
+ * @param callback
+ */
+function imageUrlToBase64(imageUrl, callback) {
+    var base64;
+    var image = new Image();
+    image.onload = function(){
+        base64 = imageToBase64(image);
+        callback(base64);
+    }
+    image.src = imageUrl;
 }

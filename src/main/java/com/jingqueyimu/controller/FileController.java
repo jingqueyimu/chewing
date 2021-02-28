@@ -1,9 +1,7 @@
 package com.jingqueyimu.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,8 +84,8 @@ public class FileController extends BaseController {
             // 设置文件名
             response.addHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(FileUtil.getFileName(fileUrl), "UTF-8"));
             
-            String filePath = Paths.get(config.getFileStoragePath().concat(File.separator).concat(fileUrl)).toAbsolutePath().toString();
-            FileUtil.downloadFile(filePath, response.getOutputStream());
+            String fileAbsolutePath = FileUtil.getAbsolutePath(config.getFileStoragePath(), fileUrl);
+            FileUtil.downloadFile(fileAbsolutePath, response.getOutputStream());
         } catch (IOException e) {
             log.error("下载文件失败", e);
             throw new AppException("下载失败");

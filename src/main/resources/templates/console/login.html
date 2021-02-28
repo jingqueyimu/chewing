@@ -6,7 +6,7 @@
       <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container d-flex justify-content-between">
           <a href="#" class="navbar-brand d-flex align-items-center">
-            <img src="/images/logo.jpg" class="my-navbar-logo">
+            <img th:src="${site_logo}" alt="logo" class="my-navbar-logo">
             <strong>Chewing ● 管理控制台</strong>
           </a>
         </div>
@@ -22,7 +22,7 @@
     </header>
 
     <div class="text-center my-main-top">
-      <img class="my-login-logo mt-5" src="/images/logo.jpg" alt="Chewing" width="72" height="72">
+      <img class="my-login-logo mt-5" th:src="${site_logo}" alt="logo" width="72" height="72">
       <form class="my-form-signin" id="login">
         <input type="text" name="name" id="name" class="form-control" placeholder="用户名" maxlength="32" required autofocus>
         <input type="password" name="password" id="password" class="form-control" placeholder="密码" maxlength="16" required>
