@@ -10,7 +10,8 @@ Chewing 是一个简单的 Java 项目快速开发脚手架。既适合需要开
 
 ## 二、源码
 
-源码地址：[https://github.com/jingqueyimu/chewing](https://github.com/jingqueyimu/chewing)。
+* Github：[https://github.com/jingqueyimu/chewing](https://github.com/jingqueyimu/chewing)。
+* Gitee：[https://gitee.com/jingqueyimu/chewing](https://gitee.com/jingqueyimu/chewing)。
 
 ## 三、核心技术
 
