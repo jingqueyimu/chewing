@@ -229,10 +229,38 @@ body {
   font-size: 2.4rem;
 }
 
-.my-mid-vertical {
+.my-img-add {
   float: none;
   display: inline-block;
   vertical-align: middle;
+}
+
+.my-mid-vertical {
+  display: flex;
+  align-items: center;
+}
+
+.my-page-select {
+  display: block;
+  height: calc(1.5em + .5rem + 2px);
+  padding: .25rem .5rem;
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .2rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.my-page-select:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 /***************** 覆盖bootstrap的样式 *****************/

@@ -3,6 +3,7 @@ package com.jingqueyimu.controller;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jingqueyimu.annotation.Lock;
+import com.jingqueyimu.exception.AppException;
+import com.jingqueyimu.factory.LockFactory;
 import com.jingqueyimu.handler.excel.IExcelImportHandler;
 import com.jingqueyimu.model.bean.ResultData;
 import com.jingqueyimu.util.ExcelUtil;
@@ -24,6 +27,9 @@ import com.jingqueyimu.util.ExcelUtil;
 @RestController
 @RequestMapping("/test")
 public class TestController extends BaseController {
+    
+    @Autowired
+    private LockFactory lockFactory;
     
     /**
      * 自定义配置
@@ -56,7 +62,8 @@ public class TestController extends BaseController {
     /**
      * 分布式锁
      *
-     * @param params
+     * @param key1
+     * @param key2
      * @return
      */
     @Lock(keys={"key1", "key2"}, waitTime=5, releaseTime=15)
@@ -68,6 +75,29 @@ public class TestController extends BaseController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return ResultData.succ(System.currentTimeMillis());
+    }
+    
+    /**
+     * 分布式锁
+     *
+     * @param key
+     * @return
+     */
+    @RequestMapping(value="/lock3")
+    public ResultData lock3(String key) {
+        log.info("===lock3===> {}", System.currentTimeMillis());
+        // 加锁
+        if (!lockFactory.tryLock(key, 5, 15)) {
+            throw new AppException("服务器繁忙");
+        }
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // 释放锁
+        lockFactory.releaseLock(key);
         return ResultData.succ(System.currentTimeMillis());
     }
     

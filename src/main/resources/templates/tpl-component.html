@@ -37,17 +37,19 @@
     </li>
   </ul>
   <script th:inline="javascript">
+    // 要请求的页面地址
+    var url = [[${url}]];
+    // 筛选参数
+    var params = [[${params}]];
+    // 要填充页面的元素的选择器
+    var selector = [[${selector}]];
+    
+    // 选择页码
     $(".pagination>.page-item").on("click", function(event){
       var text = event.currentTarget.innerText;
       if (text == "...") {
         return;
       }
-      // 要请求的页面地址
-      var url = [[${url}]];
-      // 筛选参数
-      var params = [[${params}]];
-      // 要填充页面的元素的选择器
-      var selector = [[${selector}]];
       // 当前页
       var pageNum = parseInt($("#pageNum").val());
       // 页大小
@@ -69,8 +71,13 @@
       if (targetPageNum < 1 || targetPageNum > pages || targetPageNum == pageNum) {
         return;
       }
+      getPage(targetPageNum, pageSize)
+    });
+    
+    // 获取分页
+    function getPage(pageNum, pageSize) {
       var req = {
-        pageNum: targetPageNum,
+        pageNum: pageNum,
         pageSize: pageSize,
         params: JSON.stringify(params)
       };
@@ -83,7 +90,7 @@
           $(selector).html(resp);
         }
       });
-    });
+    }
   </script>
 </nav>
 
@@ -93,8 +100,15 @@
   <input type="hidden" th:value="${pageInfo.pageSize}" id="pageSize">
   <input type="hidden" th:value="${pageInfo.pages}" id="pages">
   <div class="row d-flex justify-content-between">
-    <span class="text-secondary">共 [[${pageInfo?.total}]] 条记录</span>
-    <ul class="pagination">
+    <div class="d-flex my-mid-vertical" style="height: 1.9rem;">
+      <span class="text-secondary">共 [[${pageInfo?.total}]] 条记录</span>
+      <select class="my-page-select text-secondary ml-2">
+        <option value="10" th:selected="${pageInfo.pageSize == 10}">10条/页</option>
+        <option value="20" th:selected="${pageInfo.pageSize == 20}">20条/页</option>
+        <option value="50" th:selected="${pageInfo.pageSize == 50}">50条/页</option>
+      </select>
+    </div>
+    <ul class="pagination pagination-sm">
       <li class="page-item">
         <a class="page-link" href="#" aria-label="上一页">
           <span aria-hidden="true">&laquo;</span>
@@ -129,17 +143,19 @@
     </ul>
   </div>
   <script th:inline="javascript">
+    // 要请求的页面地址
+    var url = [[${url}]];
+    // 筛选参数
+    var params = [[${params}]];
+    // 要填充页面的元素的选择器
+    var selector = [[${selector}]];
+    
+    // 选择页码
     $(".pagination>.page-item").on("click", function(event){
       var text = event.currentTarget.innerText;
       if (text == "...") {
         return;
       }
-      // 要请求的页面地址
-      var url = [[${url}]];
-      // 筛选参数
-      var params = [[${params}]];
-      // 要填充页面的元素的选择器
-      var selector = [[${selector}]];
       // 当前页
       var pageNum = parseInt($("#pageNum").val());
       // 页大小
@@ -161,8 +177,20 @@
       if (targetPageNum < 1 || targetPageNum > pages || targetPageNum == pageNum) {
         return;
       }
+      getPage(targetPageNum, pageSize);
+    });
+    
+    // 选择每页条数
+    $(".my-page-select").on("change", function() {
+      var pageNum = parseInt($("#pageNum").val());
+      var pageSize = $(this).val();
+      getPage(pageNum, pageSize);
+    });
+    
+    // 获取分页
+    function getPage(pageNum, pageSize) {
       var req = {
-        pageNum: targetPageNum,
+        pageNum: pageNum,
         pageSize: pageSize,
         params: JSON.stringify(params)
       };
@@ -175,9 +203,10 @@
           $(selector).html(resp);
         }
       });
-    });
+    }
   </script>
 </nav>
+
 <!-- 确认框 -->
 <div th:fragment="confirm">
   <div class="modal fade" id="modal-confirm" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">

@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jingqueyimu.annotation.Lock;
 import com.jingqueyimu.constant.StatusCode;
 import com.jingqueyimu.exception.AppException;
-import com.jingqueyimu.service.component.RedisService;
+import com.jingqueyimu.factory.LockFactory;
 
 /**
  * 锁切面
@@ -26,7 +26,7 @@ import com.jingqueyimu.service.component.RedisService;
 public class LockAspect {
     
     @Autowired
-    private RedisService redisService;
+    private LockFactory lockFactory;
 
     /**
      * 环绕通知
@@ -41,14 +41,14 @@ public class LockAspect {
         String lockKey = getLockKey(point, lock);
         try {
             // 尝试加锁
-            if (!redisService.tryLock(lockKey, lock.waitTime(), lock.releaseTime())) {
+            if (!lockFactory.tryLock(lockKey, lock.waitTime(), lock.releaseTime())) {
                 throw new AppException(StatusCode.ERR_SYS_LOCK, lock.msg());
             }
             // 执行连接点处的操作
             return point.proceed();
         } finally {
             // 释放锁
-            redisService.releaseLock(lockKey);
+            lockFactory.releaseLock(lockKey);
         }
     }
     
