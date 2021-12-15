@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/client/tpl/tpl-common::head('登录')"></head>
+  <head th:replace="client/tpl/tpl-common::head('登录')"></head>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <header th:replace="client/tpl/tpl-common::top"></header>
     <div class="text-center my-main-top">
       <img class="my-login-logo mt-5" th:src="${site_logo}" alt="logo" width="72" height="72">
       <form class="my-form-signin" id="login">
@@ -19,7 +19,7 @@
       </form>
     </div>
     <!-- 底部 -->
-    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <footer th:replace="client/tpl/tpl-common::bottom"></footer>
     <script type="text/javascript">
       // 按下enter键
       document.onkeydown = function(e) {

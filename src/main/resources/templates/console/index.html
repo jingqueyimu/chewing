@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/console/tpl/tpl-common::head('首页')"></head>
+  <head th:replace="console/tpl/tpl-common::head('首页')"></head>
   
   <body>
     <!-- 顶部 -->
-    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+    <nav th:replace="console/tpl/tpl-common::top"></nav>
 
     <div class="container-fluid">
       <div class="row">
         <!-- 左侧 -->
-        <nav th:replace="/console/tpl/tpl-common::left('home')"></nav>
+        <nav th:replace="console/tpl/tpl-common::left('home')"></nav>
 
         <!-- 数据区 -->
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">

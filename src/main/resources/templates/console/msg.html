@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/console/tpl/tpl-common::head('提示信息')"></head>
+  <head th:replace="console/tpl/tpl-common::head('提示信息')"></head>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/console/tpl/tpl-common::top"></header>
+    <header th:replace="console/tpl/tpl-common::top"></header>
 
     <div class="container-fluid">
       <div class="row">
         <!-- 左侧导航 -->
-        <nav th:replace="/console/tpl/tpl-common::left('')"></nav>
+        <nav th:replace="console/tpl/tpl-common::left('')"></nav>
 
         <!-- 数据区 -->
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">

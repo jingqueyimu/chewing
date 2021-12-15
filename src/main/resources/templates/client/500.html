@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/client/tpl/tpl-common::head('500 Internal Server Error')"></head>
+  <head th:replace="client/tpl/tpl-common::head('500 Internal Server Error')"></head>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <header th:replace="client/tpl/tpl-common::top"></header>
 
     <p th:if="${msg == null}" class="text-center text-warning my-err-text my-bg-err-500" style="height: 40rem; padding-top: 9rem">
       emmm~~~<br/>
@@ -19,6 +19,6 @@
     </p>
 
     <!-- 底部 -->
-    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <footer th:replace="client/tpl/tpl-common::bottom"></footer>
   </body>
 </html>

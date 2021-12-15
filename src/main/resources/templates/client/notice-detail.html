@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/client/tpl/tpl-common::head('公告详情')"></head>
+  <head th:replace="client/tpl/tpl-common::head('公告详情')"></head>
   <style>
     .jumbotron {
       padding-left: 1rem;
@@ -19,7 +19,7 @@
   </style>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <header th:replace="client/tpl/tpl-common::top"></header>
     
     <div class="px-4 pb-2 pt-5 bg-white container" id="notice-container">
       <h5 class="pt-3 pb-3 mt-4 mb-3 jumbotron text-left">
@@ -47,6 +47,6 @@
       </div>
     </div>
     <!-- 底部 -->
-    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <footer th:replace="client/tpl/tpl-common::bottom"></footer>
   </body>
 </html>

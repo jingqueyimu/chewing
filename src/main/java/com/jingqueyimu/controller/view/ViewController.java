@@ -39,7 +39,7 @@ public class ViewController extends BaseController {
     @GetMapping({"", "/", "index.v"})
     public ModelAndView index() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/index");
+        mv.setViewName("client/index");
         return mv;
     }
     
@@ -55,7 +55,7 @@ public class ViewController extends BaseController {
             mv.setViewName("redirect:index.v");
             return mv;
         }
-        mv.setViewName("/client/login");
+        mv.setViewName("client/login");
         return mv;
     }
     
@@ -71,7 +71,7 @@ public class ViewController extends BaseController {
             mv.setViewName("redirect:index.v");
             return mv;
         }
-        mv.setViewName("/client/register");
+        mv.setViewName("client/register");
         return mv;
     }
     
@@ -88,7 +88,7 @@ public class ViewController extends BaseController {
         JSONObject params = new JSONObject();
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/notice-index");
+        mv.setViewName("client/notice-index");
         mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params));
         return mv;
     }
@@ -106,7 +106,7 @@ public class ViewController extends BaseController {
         JSONObject params = new JSONObject();
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/notice-list");
+        mv.setViewName("client/notice-list");
         mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params));
         return mv;
     }
@@ -122,7 +122,7 @@ public class ViewController extends BaseController {
         long noticeId = NumberUtils.toLong(request.getParameter("id"), 0L);
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/notice-detail");
+        mv.setViewName("client/notice-detail");
         mv.addObject("detail", noticeService.viewDetail(noticeId));
         mv.addObject("prev", noticeService.prevNotice(noticeId));
         mv.addObject("next", noticeService.nextNotice(noticeId));
@@ -137,7 +137,7 @@ public class ViewController extends BaseController {
     @GetMapping("/api/user/center.v")
     public ModelAndView userCenter() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/user-center");
+        mv.setViewName("client/user-center");
         return mv;
     }
     
@@ -150,7 +150,7 @@ public class ViewController extends BaseController {
     @GetMapping("/api/user/setting.v")
     public ModelAndView userSetting(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/user-setting");
+        mv.setViewName("client/user-setting");
         return mv;
     }
     
@@ -163,7 +163,7 @@ public class ViewController extends BaseController {
     @GetMapping("/api/feedback/index.v")
     public ModelAndView feedback(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/feedback-index");
+        mv.setViewName("client/feedback-index");
         mv.addObject("feedbackTypes", FeedbackType.values());
         return mv;
     }
@@ -183,7 +183,7 @@ public class ViewController extends BaseController {
         PageInfo<Feedback> pageInfo = feedbackService.page(pageNum, pageSize, params);
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/client/feedback-list");
+        mv.setViewName("client/feedback-list");
         mv.addObject("pageInfo", pageInfo);
         return mv;
     }

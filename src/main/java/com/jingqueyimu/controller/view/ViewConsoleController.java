@@ -65,7 +65,7 @@ public class ViewConsoleController extends BaseController {
     @GetMapping("/msg.v")
     public ModelAndView msg(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/msg");
+        mv.setViewName("console/msg");
         mv.addObject("msg", request.getParameter("msg"));
         return mv;
     }
@@ -80,9 +80,9 @@ public class ViewConsoleController extends BaseController {
         ModelAndView mv = new ModelAndView();
         CurrAdmin currAdmin = adminContext.getCurrAdmin();
         if (currAdmin == null) {
-            mv.setViewName("/console/login");
+            mv.setViewName("console/login");
         } else {
-            mv.setViewName("/console/index");
+            mv.setViewName("console/index");
         }
         return mv;
     }
@@ -98,9 +98,9 @@ public class ViewConsoleController extends BaseController {
         ModelAndView mv = new ModelAndView();
         CurrAdmin currAdmin = adminContext.getCurrAdmin();
         if (currAdmin == null) {
-            mv.setViewName("/console/login");
+            mv.setViewName("console/login");
         } else {
-            mv.setViewName("/console/index");
+            mv.setViewName("console/index");
         }
         return mv;
     }
@@ -119,7 +119,7 @@ public class ViewConsoleController extends BaseController {
         JSONObject params = JSONObject.parseObject(request.getParameter("params"));
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/user-list");
+        mv.setViewName("console/user-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", userService.page(pageNum, pageSize, params));
         mv.addObject("registerTypeMap", RegisterType.getEnumInfo());
@@ -141,7 +141,7 @@ public class ViewConsoleController extends BaseController {
         JSONObject params = JSONObject.parseObject(request.getParameter("params"));
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/product-list");
+        mv.setViewName("console/product-list");
         mv.addObject("params", params);
         // TODO 产品数据
         return mv;
@@ -161,7 +161,7 @@ public class ViewConsoleController extends BaseController {
         JSONObject params = JSONObject.parseObject(request.getParameter("params"));
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/order-list");
+        mv.setViewName("console/order-list");
         mv.addObject("params", params);
         // TODO 订单数据
         return mv;
@@ -181,7 +181,7 @@ public class ViewConsoleController extends BaseController {
         JSONObject params = JSONObject.parseObject(request.getParameter("params"));
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/feedback-list");
+        mv.setViewName("console/feedback-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", feedbackService.pageFeedback(pageNum, pageSize, params));
         mv.addObject("feedbackTypeMap", FeedbackType.getEnumInfo());
@@ -209,7 +209,7 @@ public class ViewConsoleController extends BaseController {
         }
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/admin-list");
+        mv.setViewName("console/admin-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", adminService.page(pageNum, pageSize, params));
         return mv;
@@ -226,7 +226,7 @@ public class ViewConsoleController extends BaseController {
     public ModelAndView adminPermission(HttpServletRequest request) {
         long adminId = NumberUtils.toLong(request.getParameter("adminId"), 0L);
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/admin-permission");
+        mv.setViewName("console/admin-permission");
         // 权限数据
         Map<String, List<PermissionWithAccessVO>> permissionData = new HashMap<String, List<PermissionWithAccessVO>>();
         JSONObject params = new JSONObject();
@@ -252,7 +252,7 @@ public class ViewConsoleController extends BaseController {
     @GetMapping("/admin/info.v")
     public ModelAndView adminInfo(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/admin-info");
+        mv.setViewName("console/admin-info");
         return mv;
     }
     
@@ -274,7 +274,7 @@ public class ViewConsoleController extends BaseController {
         }
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/site-config-list");
+        mv.setViewName("console/site-config-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", siteConfigService.page(pageNum, pageSize, params));
         mv.addObject("siteConfigContentTypes", SiteConfigContentType.values());
@@ -299,7 +299,7 @@ public class ViewConsoleController extends BaseController {
         }
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/schedule-job-list");
+        mv.setViewName("console/schedule-job-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", scheduleJobService.page(pageNum, pageSize, params));
         mv.addObject("scheduleJobStatuses", ScheduleJobStatus.values());
@@ -322,7 +322,7 @@ public class ViewConsoleController extends BaseController {
         JSONObject params = JSONObject.parseObject(request.getParameter("params"));
         
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/console/notice-list");
+        mv.setViewName("console/notice-list");
         mv.addObject("params", params);
         mv.addObject("pageInfo", noticeService.page(pageNum, pageSize, params, "id", false));
         return mv;

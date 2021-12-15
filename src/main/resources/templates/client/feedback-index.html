@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/client/tpl/tpl-common::head('意见反馈')"></head>
+  <head th:replace="client/tpl/tpl-common::head('意见反馈')"></head>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <header th:replace="client/tpl/tpl-common::top"></header>
     <div class="text-center container my-main-top">
       <div class="form-group">
         <label class="h4 mt-5" for="feedback-content">意见反馈</label>
@@ -17,7 +17,7 @@
     </div>
 
     <!-- 底部 -->
-    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <footer th:replace="client/tpl/tpl-common::bottom"></footer>
     <script type="text/javascript">
       // 提交反馈
       $("#feedback-submit").on("click", function () {

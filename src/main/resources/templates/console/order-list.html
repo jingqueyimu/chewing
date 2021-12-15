@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/console/tpl/tpl-common::head('订单列表')"></head>
+  <head th:replace="console/tpl/tpl-common::head('订单列表')"></head>
   <body>
     <!-- 顶部 -->
-    <nav th:replace="/console/tpl/tpl-common::top"></nav>
+    <nav th:replace="console/tpl/tpl-common::top"></nav>
 
     <div class="container-fluid">
       <div class="row">
         <!-- 左侧导航 -->
-        <nav th:replace="/console/tpl/tpl-common::left('order')"></nav>
+        <nav th:replace="console/tpl/tpl-common::left('order')"></nav>
 
         <!-- 数据区 -->
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-data">
           <!-- 面包屑导航 -->
-          <nav th:replace="/console/tpl/tpl-module::order-top('list')"></nav>
+          <nav th:replace="console/tpl/tpl-module::order-top('list')"></nav>
           <!-- 搜索区 -->
           <form id="form-search">
             <div class="form-row mb-2">

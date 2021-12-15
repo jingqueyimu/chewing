@@ -1,12 +1,12 @@
 package com.jingqueyimu.controller;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +36,7 @@ public class FileController extends BaseController {
         String filePath = null;
         try {
             filePath = FileUtil.uploadFile(file.getInputStream(), config.getFileStoragePath(), file.getOriginalFilename());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("上传文件失败: {}", file.getOriginalFilename(), e);
             throw new AppException("上传失败");
         }
@@ -58,8 +58,10 @@ public class FileController extends BaseController {
         for (MultipartFile file : files) {
             try {
                 String filePath = FileUtil.uploadFile(file.getInputStream(), config.getFileStoragePath(), file.getOriginalFilename());
-                filePaths.add(filePath);
-            } catch (IOException e) {
+                if (StringUtils.isNotBlank(filePath)) {
+                    filePaths.add(filePath);
+                }
+            } catch (Exception e) {
                 log.error("上传文件失败: {}", file.getOriginalFilename(), e);
             }
         }
@@ -86,7 +88,7 @@ public class FileController extends BaseController {
             
             String fileAbsolutePath = FileUtil.getAbsolutePath(config.getFileStoragePath(), fileUrl);
             FileUtil.downloadFile(fileAbsolutePath, response.getOutputStream());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("下载文件失败", e);
             throw new AppException("下载失败");
         }

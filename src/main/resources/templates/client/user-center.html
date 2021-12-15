@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/client/tpl/tpl-common::head('个人中心')"></head>
+  <head th:replace="client/tpl/tpl-common::head('个人中心')"></head>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <header th:replace="client/tpl/tpl-common::top"></header>
     <div class="text-center container my-main-top">
       <div class="row">
         <div class="col-md-2 mt-5">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <!-- 底部 -->
-    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <footer th:replace="client/tpl/tpl-common::bottom"></footer>
     <script type="text/javascript">
       // 初始化
       $(function () {

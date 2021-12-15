@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 需要加上 xmlns:th="http://www.thymeleaf.org, 否则th标签会报错-->
 <html xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="/client/tpl/tpl-common::head('首页')"></head>
+  <head th:replace="client/tpl/tpl-common::head('首页')"></head>
   <style>
     .jumbotron {
       padding-top: 7rem !important;
@@ -10,7 +10,7 @@
   </style>
   <body>
     <!-- 顶部 -->
-    <header th:replace="/client/tpl/tpl-common::top"></header>
+    <header th:replace="client/tpl/tpl-common::top"></header>
     <main role="main">
       <section class="jumbotron text-center">
         <div class="container">
@@ -86,7 +86,7 @@
       </div>
     </main>
     <!-- 底部 -->
-    <footer th:replace="/client/tpl/tpl-common::bottom"></footer>
+    <footer th:replace="client/tpl/tpl-common::bottom"></footer>
     <script type="text/javascript">
     </script>
   </body>

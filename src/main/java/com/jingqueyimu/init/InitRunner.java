@@ -126,12 +126,13 @@ public class InitRunner implements CommandLineRunner {
         Permission permission = null;
         for (Entry<String, Map<String, Object>> entry : permissionMethods.entrySet()) {
             path = entry.getKey();
-            groupCode = entry.getValue().get("group").toString();
-            name = entry.getValue().get("name").toString();
-            description = entry.getValue().get("description").toString();
             if (StringUtils.isBlank(path)) {
                 continue;
             }
+            path = path.startsWith("/") ? path : "/" + path;
+            groupCode = entry.getValue().get("group").toString();
+            name = entry.getValue().get("name").toString();
+            description = entry.getValue().get("description").toString();
             // 保存或更新权限
             permission = permissionService.saveOrUpdateByPath(path, groupCode, name, description);
             // 保存超级管理员权限
