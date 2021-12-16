@@ -1,3 +1,8 @@
+#!/bin/bash
+
+### 注意：在windows下编辑shell脚本时，由于linux与windows的换行符不同，可能会导致续行符（\）失效，从而导致shell脚本执行报错。###
+### 此时，可以在linux下使用dos2unix命令（没有的话需要先安装）对文件进行转换。###
+
 # 应用版本
 VERSION=v1.0.0
 # 应用jar包路径
@@ -16,4 +21,3 @@ docker run -d -p 9000:9000 -v ${FILE_PATH}:${FILE_PATH} -v ${JAR_PATH}:/package 
   -e spring.redis.host="127.0.0.1" \
   -e myconfig.fileStoragePath=${FILE_PATH} \
   --name chewing chewing:${VERSION}
-
